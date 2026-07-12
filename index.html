@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventi Skål Europe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     BRAND TOKENS — valori ufficiali da Skål International
+     Brand Guidelines 2025
+     ============================================================ */
+  :root{
+    --navy:#314691;      /* Dark blue */
+    --light-blue:#65a8de;/* Light blue */
+    --grey:#59595b;      /* Grey 80% */
+    --yellow:#edd945;    /* Happy yellow — accento per evidenze */
+    --ink:#2b2b2d;
+    --muted:#6b6f76;
+    --line:#e4e6ea;
+    --bg:#f7f8fa;
+    --white:#ffffff;
+    --font-display:"Montserrat","Helvetica Neue",sans-serif;
+    --font-body:"Montserrat","Helvetica Neue",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.5;
+  }
+  a{color:inherit;}
+
+  /* ---------- Header ---------- */
+  /* Sfondo chiaro per rispettare la regola brand: "Don't use the main logo
+     on dark backgrounds" — usiamo qui il logo primario a colori. */
+  header.site{
+    background:var(--white);
+    color:var(--ink);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:18px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  /* Logo ufficiale: nessuna rotazione, nessun ritaglio, nessun effetto —
+     solo lo spazio di rispetto (clear space) richiesto dalle guideline. */
+  .brand img.logo{
+    height:38px;
+    width:auto;
+    display:block;
+  }
+  nav.main-nav{
+    display:flex;
+    gap:22px;
+    flex-wrap:wrap;
+    font-size:14px;
+  }
+  nav.main-nav a{
+    text-decoration:none;
+    color:var(--grey);
+    padding:6px 0;
+    border-bottom:2px solid transparent;
+    font-weight:500;
+    transition:color .15s, border-color .15s;
+  }
+  nav.main-nav a:hover{color:var(--navy);}
+  nav.main-nav a.active{
+    color:var(--navy);
+    border-color:var(--light-blue);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:1180px;
+    margin:0 auto;
+    padding:46px 24px 20px;
+  }
+  .hero .eyebrow{
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--light-blue);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .hero h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(28px,4vw,40px);
+    margin:0 0 10px;
+    color:var(--navy);
+  }
+  .hero p{
+    color:var(--muted);
+    max-width:640px;
+    margin:0;
+    font-size:15px;
+  }
+
+  /* ---------- Filtri ---------- */
+  .filters{
+    max-width:1180px;
+    margin:28px auto 0;
+    padding:0 24px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+  }
+  @media (max-width:900px){ .filters{grid-template-columns:repeat(2,1fr);} }
+  .filters select, .filters input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--white);
+    font-family:var(--font-body);
+    font-size:13.5px;
+    color:var(--ink);
+  }
+  .filters select:focus, .filters input:focus{
+    outline:2px solid var(--light-blue);
+    outline-offset:1px;
+  }
+
+  /* ---------- Griglia eventi ---------- */
+  .results-meta{
+    max-width:1180px;
+    margin:22px auto 0;
+    padding:0 24px;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .grid{
+    max-width:1180px;
+    margin:14px auto 60px;
+    padding:0 24px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+  }
+  @media (max-width:960px){ .grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:640px){ .grid{grid-template-columns:1fr;} }
+
+  .card{
+    background:var(--white);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    position:relative;
+  }
+  .badge{
+    display:inline-block;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:20px;
+    width:fit-content;
+  }
+  .badge.type-academy{background:#e7edf7;color:var(--navy);}
+  .badge.type-club_event{background:#eef3ee;color:#3f6b4a;}
+  .badge.type-fair{background:#eaf3fb;color:var(--light-blue);}
+
+  .badge.skal-booth{
+    background:var(--yellow);
+    color:#5a4d00;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+  }
+
+  .card h3{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:17px;
+    margin:0;
+    color:var(--navy);
+    line-height:1.3;
+  }
+  .card .meta-line{
+    font-size:12.5px;
+    color:var(--muted);
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .card .desc{
+    font-size:13.5px;
+    color:var(--ink);
+    flex-grow:1;
+  }
+  .card .topics{
+    display:flex;flex-wrap:wrap;gap:6px;
+  }
+  .card .topics span{
+    font-size:11px;
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:2px 8px;
+    border-radius:20px;
+    color:var(--muted);
+  }
+  .card .actions{
+    display:flex;
+    gap:8px;
+    margin-top:6px;
+    flex-wrap:wrap;
+  }
+  .card .actions a{
+    font-size:12.5px;
+    text-decoration:none;
+    padding:8px 12px;
+    border-radius:6px;
+    border:1px solid var(--line);
+    color:var(--navy);
+    font-weight:600;
+  }
+  .card .actions a.primary{
+    background:var(--navy);
+    color:var(--white);
+    border-color:var(--navy);
+  }
+
+  .empty-state, .loading-state{
+    max-width:1180px;
+    margin:40px auto;
+    padding:0 24px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+  }
+
+  /* ---------- Footer ---------- */
+  /* Niente logo qui: lo sfondo scuro violerebbe la regola brand sul logo
+     principale. Solo testo, come da guideline "Grey 80%" su chiaro sarebbe
+     l'alternativa; qui usiamo un footer scuro puramente testuale. */
+  footer.site{
+    background:var(--navy);
+    color:rgba(255,255,255,.75);
+    font-size:13px;
+    margin-top:auto;
+  }
+  .footer-inner{
+    max-width:1180px;
+    margin:0 auto;
+    padding:30px 24px;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .footer-inner a{color:rgba(255,255,255,.75);text-decoration:none;}
+  .footer-inner a:hover{color:var(--white);}
+  .footer-links{display:flex;gap:16px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <div class="brand">
+      <a href="https://www.skaleurope.org/"><img class="logo" src="logo-skal-europe.png" alt="Skål International Europe"></a>
+    </div>
+    <nav class="main-nav">
+      <a href="https://www.skaleurope.org/">Home</a>
+      <a href="https://www.skaleurope.org/skal-europe-activities/">Activities</a>
+      <a href="https://www.skaleurope.org/Tag/youngeuropeskal/">Young</a>
+      <a href="#" class="active">Events</a>
+      <a href="https://www.skaleurope.org/blog/">News</a>
+      <a href="https://www.skaleurope.org/team/">About Us</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Skål Europe · Connecting Tourism Globally</div>
+  <h1>Eventi Skål Europe</h1>
+  <p>Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti. Filtra per club, nazione, tipo di evento e argomento.</p>
+</section>
+
+<div class="filters">
+  <select id="fType">
+    <option value="">Tutti i tipi</option>
+    <option value="academy">Accademia</option>
+    <option value="club_event">Evento di club</option>
+    <option value="fair">Fiera</option>
+  </select>
+  <select id="fCountry"><option value="">Tutte le nazioni</option></select>
+  <select id="fClub"><option value="">Tutti i club</option></select>
+  <select id="fTopic"><option value="">Tutti gli argomenti</option></select>
+  <input id="fSearch" type="text" placeholder="Cerca per titolo…">
+</div>
+
+<div class="results-meta" id="resultsMeta">Caricamento eventi…</div>
+<div class="grid" id="grid"></div>
+
+<footer class="site">
+  <div class="footer-inner">
+    <div>© 2026 Skål Europe — piattaforma eventi</div>
+    <div class="footer-links">
+      <a href="https://www.skaleurope.org/privacy/">Privacy</a>
+      <a href="https://www.skaleurope.org/cookie-policy-eu/">Cookie Policy</a>
+      <a href="https://www.skaleurope.org/terms-conditions/">Terms</a>
+      <a href="https://www.skaleurope.org/statute/">Statute</a>
+    </div>
+  </div>
+</footer>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+  // ============================================================
+  // CONFIGURAZIONE — sostituisci con i valori del tuo progetto
+  // ============================================================
+ const SUPABASE_URL = 'https://fbtxpgxblbfjkezbsdqv.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable__0-aMEvhSZn3ppXk4a50ZA_RtfBW-Rc';
+  // ============================================================
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const grid = document.getElementById('grid');
+  const resultsMeta = document.getElementById('resultsMeta');
+  const fType = document.getElementById('fType');
+  const fCountry = document.getElementById('fCountry');
+  const fClub = document.getElementById('fClub');
+  const fTopic = document.getElementById('fTopic');
+  const fSearch = document.getElementById('fSearch');
+
+  const typeLabels = { academy: 'Accademia', club_event: 'Evento di club', fair: 'Fiera' };
+
+  function escapeHtml(s){
+    return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function formatDate(d){
+    return new Date(d).toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  function buildIcsLink(ev){
+    const start = new Date(ev.start_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+    const end = ev.end_date ? new Date(ev.end_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z' : start;
+    const body = [
+      'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+      `SUMMARY:${ev.title.replace(/\n/g,' ')}`,
+      `DTSTART:${start}`,`DTEND:${end}`,
+      `DESCRIPTION:${(ev.description||'').replace(/\n/g,' ')}`,
+      'END:VEVENT','END:VCALENDAR'
+    ].join('\r\n');
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(body);
+  }
+
+  function renderEvents(events){
+    if (!events.length){
+      grid.innerHTML = '';
+      resultsMeta.textContent = 'Nessun evento trovato con questi filtri.';
+      return;
+    }
+    resultsMeta.textContent = `${events.length} eventi trovati`;
+    grid.innerHTML = events.map(ev => `
+      <div class="card">
+        <span class="badge type-${ev.type}">${typeLabels[ev.type] || ev.type}</span>
+        ${ev.type === 'fair' && ev.has_skal_booth ? `<span class="badge skal-booth">★ Stand Skål${ev.booth_details ? ' · ' + escapeHtml(ev.booth_details) : ''}</span>` : ''}
+        <h3>${escapeHtml(ev.title)}</h3>
+        <div class="meta-line">
+          <span>${formatDate(ev.start_date)}</span>
+          ${ev.clubs ? `<span>· ${escapeHtml(ev.clubs.name)}</span>` : ''}
+          ${ev.countries ? `<span>· ${escapeHtml(ev.countries.name)}</span>` : ''}
+          <span>· ${ev.mode === 'online' ? 'Online' : ev.mode === 'hybrid' ? 'Ibrido' : 'In presenza'}</span>
+        </div>
+        ${ev.description ? `<div class="desc">${escapeHtml(ev.description.slice(0,140))}${ev.description.length>140?'…':''}</div>` : ''}
+        <div class="actions">
+          ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">Sito ufficiale</a>` : ''}
+          ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">Registrati</a>` : ''}
+          <a href="${buildIcsLink(ev)}" download="evento.ics">+ Calendario</a>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  async function loadFilterOptions(){
+    const [{ data: countries }, { data: clubs }, { data: topics }] = await Promise.all([
+      supabase.from('countries').select('id,name').order('name'),
+      supabase.from('clubs').select('id,name').order('name'),
+      supabase.from('topics').select('id,name').order('name')
+    ]);
+    (countries||[]).forEach(c => fCountry.insertAdjacentHTML('beforeend', `<option value="${c.id}">${escapeHtml(c.name)}</option>`));
+    (clubs||[]).forEach(c => fClub.insertAdjacentHTML('beforeend', `<option value="${c.id}">${escapeHtml(c.name)}</option>`));
+    (topics||[]).forEach(t => fTopic.insertAdjacentHTML('beforeend', `<option value="${t.id}">${escapeHtml(t.name)}</option>`));
+  }
+
+  async function loadEvents(){
+    resultsMeta.textContent = 'Caricamento eventi…';
+    let query = supabase
+      .from('events')
+      .select('*, clubs(name), countries(name), event_topics(topic_id)')
+      .eq('status', 'published')
+      .order('start_date', { ascending: true });
+
+    if (fType.value) query = query.eq('type', fType.value);
+    if (fCountry.value) query = query.eq('country_id', fCountry.value);
+    if (fClub.value) query = query.eq('club_id', fClub.value);
+    if (fSearch.value.trim()) query = query.ilike('title', `%${fSearch.value.trim()}%`);
+
+    const { data, error } = await query;
+    if (error){
+      resultsMeta.textContent = 'Errore nel caricamento eventi.';
+      console.error(error);
+      return;
+    }
+
+    let filtered = data || [];
+    if (fTopic.value){
+      filtered = filtered.filter(ev => ev.event_topics?.some(et => String(et.topic_id) === fTopic.value));
+    }
+    renderEvents(filtered);
+  }
+
+  [fType, fCountry, fClub, fTopic].forEach(el => el.addEventListener('change', loadEvents));
+  fSearch.addEventListener('input', () => {
+    clearTimeout(window._searchDebounce);
+    window._searchDebounce = setTimeout(loadEvents, 300);
+  });
+
+  loadFilterOptions();
+  loadEvents();
+</script>
+
+</body>
+</html>
