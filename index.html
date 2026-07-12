@@ -83,6 +83,28 @@
     color:var(--navy);
     border-color:var(--light-blue);
   }
+  .lang-switch{
+    display:flex;
+    gap:2px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .lang-switch button{
+    border:none;
+    background:var(--white);
+    color:var(--muted);
+    font-family:var(--font-body);
+    font-size:12px;
+    font-weight:600;
+    padding:6px 9px;
+    cursor:pointer;
+  }
+  .lang-switch button:hover{background:var(--bg);}
+  .lang-switch button.active{
+    background:var(--navy);
+    color:var(--white);
+  }
 
   /* ---------- Hero ---------- */
   .hero{
@@ -288,34 +310,41 @@
       <a href="https://www.skaleurope.org/blog/">News</a>
       <a href="https://www.skaleurope.org/team/">About Us</a>
     </nav>
+    <div class="lang-switch" id="langSwitch">
+      <button data-lang="en">EN</button>
+      <button data-lang="fr">FR</button>
+      <button data-lang="it">IT</button>
+      <button data-lang="de">DE</button>
+      <button data-lang="es">ES</button>
+    </div>
   </div>
 </header>
 
 <section class="hero">
-  <div class="eyebrow">Skål Europe · Connecting Tourism Globally</div>
-  <h1>Eventi Skål Europe</h1>
-  <p>Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti. Filtra per club, nazione, tipo di evento e argomento.</p>
+  <div class="eyebrow" data-i18n="eyebrow">Skål Europe · Connecting Tourism Globally</div>
+  <h1 data-i18n="title">Eventi Skål Europe</h1>
+  <p data-i18n="subtitle">Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti. Filtra per club, nazione, tipo di evento e argomento.</p>
 </section>
 
 <div class="filters">
   <select id="fType">
-    <option value="">Tutti i tipi</option>
-    <option value="academy">Accademia</option>
-    <option value="club_event">Evento di club</option>
-    <option value="fair">Fiera</option>
+    <option value="" data-i18n="filterAllTypes">Tutti i tipi</option>
+    <option value="academy" data-i18n="typeAcademy">Accademia</option>
+    <option value="club_event" data-i18n="typeClub">Evento di club</option>
+    <option value="fair" data-i18n="typeFair">Fiera</option>
   </select>
-  <select id="fCountry"><option value="">Tutte le nazioni</option></select>
-  <select id="fClub"><option value="">Tutti i club</option></select>
-  <select id="fTopic"><option value="">Tutti gli argomenti</option></select>
-  <input id="fSearch" type="text" placeholder="Cerca per titolo…">
+  <select id="fCountry"><option value="" data-i18n="filterAllCountries">Tutte le nazioni</option></select>
+  <select id="fClub"><option value="" data-i18n="filterAllClubs">Tutti i club</option></select>
+  <select id="fTopic"><option value="" data-i18n="filterAllTopics">Tutti gli argomenti</option></select>
+  <input id="fSearch" type="text" data-i18n-placeholder="searchPlaceholder" placeholder="Cerca per titolo…">
 </div>
 
-<div class="results-meta" id="resultsMeta">Caricamento eventi…</div>
+<div class="results-meta" id="resultsMeta" data-i18n="loading">Caricamento eventi…</div>
 <div class="grid" id="grid"></div>
 
 <footer class="site">
   <div class="footer-inner">
-    <div>© 2026 Skål Europe — piattaforma eventi</div>
+    <div data-i18n="footerText">© 2026 Skål Europe — piattaforma eventi</div>
     <div class="footer-links">
       <a href="https://www.skaleurope.org/privacy/">Privacy</a>
       <a href="https://www.skaleurope.org/cookie-policy-eu/">Cookie Policy</a>
@@ -331,11 +360,123 @@
   // ============================================================
   // CONFIGURAZIONE — sostituisci con i valori del tuo progetto
   // ============================================================
- const SUPABASE_URL = 'https://fbtxpgxblbfjkezbsdqv.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable__0-aMEvhSZn3ppXk4a50ZA_RtfBW-Rc';
+  const SUPABASE_URL = 'https://TUO-PROGETTO.supabase.co';
+  const SUPABASE_ANON_KEY = 'TUA-CHIAVE-PUBBLICA';
   // ============================================================
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ============================================================
+  // TRADUZIONI — 5 lingue: EN, FR, IT, DE, ES
+  // ============================================================
+  const translations = {
+    en: {
+      eyebrow: "Skål Europe · Connecting Tourism Globally",
+      title: "Skål Europe Events",
+      subtitle: "Academies, Club events and the main European tourism trade fairs — with Skål booths highlighted where present. Filter by club, country, event type and topic.",
+      filterAllTypes: "All types", typeAcademy: "Academy", typeClub: "Club event", typeFair: "Trade fair",
+      filterAllCountries: "All countries", filterAllClubs: "All clubs", filterAllTopics: "All topics",
+      searchPlaceholder: "Search by title…",
+      loading: "Loading events…", noResults: "No events found with these filters.",
+      resultsCount: n => `${n} events found`, loadError: "Error loading events.",
+      modeOnline: "Online", modeHybrid: "Hybrid", modeInPerson: "In person",
+      officialSite: "Official site", register: "Register", addCalendar: "+ Calendar",
+      skalBooth: "Skål booth", footerText: "© 2026 Skål Europe — events platform",
+      locale: "en-GB"
+    },
+    fr: {
+      eyebrow: "Skål Europe · Connecting Tourism Globally",
+      title: "Événements Skål Europe",
+      subtitle: "Académies, événements de clubs et principaux salons du tourisme en Europe — avec mise en évidence des stands Skål. Filtrez par club, pays, type d'événement et sujet.",
+      filterAllTypes: "Tous les types", typeAcademy: "Académie", typeClub: "Événement de club", typeFair: "Salon",
+      filterAllCountries: "Tous les pays", filterAllClubs: "Tous les clubs", filterAllTopics: "Tous les sujets",
+      searchPlaceholder: "Rechercher par titre…",
+      loading: "Chargement des événements…", noResults: "Aucun événement trouvé avec ces filtres.",
+      resultsCount: n => `${n} événements trouvés`, loadError: "Erreur de chargement des événements.",
+      modeOnline: "En ligne", modeHybrid: "Hybride", modeInPerson: "En présentiel",
+      officialSite: "Site officiel", register: "S'inscrire", addCalendar: "+ Calendrier",
+      skalBooth: "Stand Skål", footerText: "© 2026 Skål Europe — plateforme d'événements",
+      locale: "fr-FR"
+    },
+    it: {
+      eyebrow: "Skål Europe · Connecting Tourism Globally",
+      title: "Eventi Skål Europe",
+      subtitle: "Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti. Filtra per club, nazione, tipo di evento e argomento.",
+      filterAllTypes: "Tutti i tipi", typeAcademy: "Accademia", typeClub: "Evento di club", typeFair: "Fiera",
+      filterAllCountries: "Tutte le nazioni", filterAllClubs: "Tutti i club", filterAllTopics: "Tutti gli argomenti",
+      searchPlaceholder: "Cerca per titolo…",
+      loading: "Caricamento eventi…", noResults: "Nessun evento trovato con questi filtri.",
+      resultsCount: n => `${n} eventi trovati`, loadError: "Errore nel caricamento eventi.",
+      modeOnline: "Online", modeHybrid: "Ibrido", modeInPerson: "In presenza",
+      officialSite: "Sito ufficiale", register: "Registrati", addCalendar: "+ Calendario",
+      skalBooth: "Stand Skål", footerText: "© 2026 Skål Europe — piattaforma eventi",
+      locale: "it-IT"
+    },
+    de: {
+      eyebrow: "Skål Europe · Connecting Tourism Globally",
+      title: "Skål Europe Veranstaltungen",
+      subtitle: "Akademien, Club-Veranstaltungen und die wichtigsten Tourismusmessen Europas — mit Hervorhebung der Skål-Stände. Filtern Sie nach Club, Land, Veranstaltungstyp und Thema.",
+      filterAllTypes: "Alle Typen", typeAcademy: "Akademie", typeClub: "Club-Veranstaltung", typeFair: "Messe",
+      filterAllCountries: "Alle Länder", filterAllClubs: "Alle Clubs", filterAllTopics: "Alle Themen",
+      searchPlaceholder: "Nach Titel suchen…",
+      loading: "Veranstaltungen werden geladen…", noResults: "Keine Veranstaltungen mit diesen Filtern gefunden.",
+      resultsCount: n => `${n} Veranstaltungen gefunden`, loadError: "Fehler beim Laden der Veranstaltungen.",
+      modeOnline: "Online", modeHybrid: "Hybrid", modeInPerson: "Vor Ort",
+      officialSite: "Offizielle Website", register: "Anmelden", addCalendar: "+ Kalender",
+      skalBooth: "Skål-Stand", footerText: "© 2026 Skål Europe — Veranstaltungsplattform",
+      locale: "de-DE"
+    },
+    es: {
+      eyebrow: "Skål Europe · Connecting Tourism Globally",
+      title: "Eventos Skål Europe",
+      subtitle: "Academias, eventos de clubes y las principales ferias de turismo en Europa — con los stands de Skål destacados donde estén presentes. Filtra por club, país, tipo de evento y tema.",
+      filterAllTypes: "Todos los tipos", typeAcademy: "Academia", typeClub: "Evento de club", typeFair: "Feria",
+      filterAllCountries: "Todos los países", filterAllClubs: "Todos los clubes", filterAllTopics: "Todos los temas",
+      searchPlaceholder: "Buscar por título…",
+      loading: "Cargando eventos…", noResults: "No se encontraron eventos con estos filtros.",
+      resultsCount: n => `${n} eventos encontrados`, loadError: "Error al cargar los eventos.",
+      modeOnline: "En línea", modeHybrid: "Híbrido", modeInPerson: "Presencial",
+      officialSite: "Sitio oficial", register: "Inscribirse", addCalendar: "+ Calendario",
+      skalBooth: "Stand de Skål", footerText: "© 2026 Skål Europe — plataforma de eventos",
+      locale: "es-ES"
+    }
+  };
+
+  function detectInitialLang(){
+    const saved = localStorage.getItem('skal-lang');
+    if (saved && translations[saved]) return saved;
+    const browser = (navigator.language || 'en').slice(0,2);
+    return translations[browser] ? browser : 'en';
+  }
+
+  let currentLang = detectInitialLang();
+  let lastEvents = [];
+
+  function t(key){ return translations[currentLang][key]; }
+
+  function applyStaticTranslations(){
+    document.documentElement.lang = currentLang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    });
+    document.querySelectorAll('#langSwitch button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === currentLang);
+    });
+  }
+
+  document.getElementById('langSwitch').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-lang]');
+    if (!btn) return;
+    currentLang = btn.dataset.lang;
+    localStorage.setItem('skal-lang', currentLang);
+    applyStaticTranslations();
+    renderEvents(lastEvents);
+  });
+
+  applyStaticTranslations();
 
   const grid = document.getElementById('grid');
   const resultsMeta = document.getElementById('resultsMeta');
@@ -345,14 +486,16 @@
   const fTopic = document.getElementById('fTopic');
   const fSearch = document.getElementById('fSearch');
 
-  const typeLabels = { academy: 'Accademia', club_event: 'Evento di club', fair: 'Fiera' };
-
   function escapeHtml(s){
     return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
+  function typeLabels(){
+    return { academy: t('typeAcademy'), club_event: t('typeClub'), fair: t('typeFair') };
+  }
+
   function formatDate(d){
-    return new Date(d).toLocaleDateString('it-IT', { day:'2-digit', month:'short', year:'numeric' });
+    return new Date(d).toLocaleDateString(t('locale'), { day:'2-digit', month:'short', year:'numeric' });
   }
 
   function buildIcsLink(ev){
@@ -369,28 +512,30 @@
   }
 
   function renderEvents(events){
+    lastEvents = events;
     if (!events.length){
       grid.innerHTML = '';
-      resultsMeta.textContent = 'Nessun evento trovato con questi filtri.';
+      resultsMeta.textContent = t('noResults');
       return;
     }
-    resultsMeta.textContent = `${events.length} eventi trovati`;
+    resultsMeta.textContent = t('resultsCount')(events.length);
+    const labels = typeLabels();
     grid.innerHTML = events.map(ev => `
       <div class="card">
-        <span class="badge type-${ev.type}">${typeLabels[ev.type] || ev.type}</span>
-        ${ev.type === 'fair' && ev.has_skal_booth ? `<span class="badge skal-booth">★ Stand Skål${ev.booth_details ? ' · ' + escapeHtml(ev.booth_details) : ''}</span>` : ''}
+        <span class="badge type-${ev.type}">${labels[ev.type] || ev.type}</span>
+        ${ev.type === 'fair' && ev.has_skal_booth ? `<span class="badge skal-booth">★ ${t('skalBooth')}${ev.booth_details ? ' · ' + escapeHtml(ev.booth_details) : ''}</span>` : ''}
         <h3>${escapeHtml(ev.title)}</h3>
         <div class="meta-line">
           <span>${formatDate(ev.start_date)}</span>
           ${ev.clubs ? `<span>· ${escapeHtml(ev.clubs.name)}</span>` : ''}
           ${ev.countries ? `<span>· ${escapeHtml(ev.countries.name)}</span>` : ''}
-          <span>· ${ev.mode === 'online' ? 'Online' : ev.mode === 'hybrid' ? 'Ibrido' : 'In presenza'}</span>
+          <span>· ${ev.mode === 'online' ? t('modeOnline') : ev.mode === 'hybrid' ? t('modeHybrid') : t('modeInPerson')}</span>
         </div>
         ${ev.description ? `<div class="desc">${escapeHtml(ev.description.slice(0,140))}${ev.description.length>140?'…':''}</div>` : ''}
         <div class="actions">
-          ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">Sito ufficiale</a>` : ''}
-          ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">Registrati</a>` : ''}
-          <a href="${buildIcsLink(ev)}" download="evento.ics">+ Calendario</a>
+          ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">${t('officialSite')}</a>` : ''}
+          ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">${t('register')}</a>` : ''}
+          <a href="${buildIcsLink(ev)}" download="evento.ics">${t('addCalendar')}</a>
         </div>
       </div>
     `).join('');
@@ -408,7 +553,7 @@
   }
 
   async function loadEvents(){
-    resultsMeta.textContent = 'Caricamento eventi…';
+    resultsMeta.textContent = t('loading');
     let query = supabase
       .from('events')
       .select('*, clubs(name), countries(name), event_topics(topic_id)')
@@ -422,7 +567,7 @@
 
     const { data, error } = await query;
     if (error){
-      resultsMeta.textContent = 'Errore nel caricamento eventi.';
+      resultsMeta.textContent = t('loadError');
       console.error(error);
       return;
     }
