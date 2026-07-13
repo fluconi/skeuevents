@@ -209,6 +209,10 @@
           <input id="f_registration_url" type="url">
         </div>
         <div class="full">
+          <label>Image URL</label>
+          <input id="f_image_url" type="url" placeholder="https://…">
+        </div>
+        <div class="full">
           <label>Tags (comma-separated)</label>
           <input id="f_tags" placeholder="leadership, sustainability">
         </div>
@@ -241,13 +245,7 @@
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-  // ============================================================
-  // CONFIGURATION — same project as the public site
-  // ============================================================
-  const SUPABASE_URL = 'https://fbtxpgxblbfjkezbsdqv.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable__0-aMEvhSZn3ppXk4a50ZA_RtfBW-Rc';
-  // ============================================================
+  import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -389,6 +387,7 @@
       club_id: el('f_club').value ? Number(el('f_club').value) : null,
       official_url: el('f_official_url').value || null,
       registration_url: el('f_registration_url').value || null,
+      image_url: el('f_image_url').value || null,
       has_skal_booth: type === 'fair' ? el('f_has_booth').checked : false,
       booth_details: (type === 'fair' && el('f_has_booth').checked) ? (el('f_booth_details').value || null) : null,
       status: el('f_status').value,

@@ -7,292 +7,102 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
-  /* ============================================================
-     BRAND TOKENS — valori ufficiali da Skål International
-     Brand Guidelines 2025
-     ============================================================ */
   :root{
-    --navy:#314691;      /* Dark blue */
-    --light-blue:#65a8de;/* Light blue */
-    --grey:#59595b;      /* Grey 80% */
-    --yellow:#edd945;    /* Happy yellow — accento per evidenze */
-    --ink:#2b2b2d;
-    --muted:#6b6f76;
-    --line:#e4e6ea;
-    --bg:#f7f8fa;
-    --white:#ffffff;
-    --font-display:"Montserrat","Helvetica Neue",sans-serif;
-    --font-body:"Montserrat","Helvetica Neue",sans-serif;
+    --navy:#314691; --light-blue:#65a8de; --grey:#59595b;
+    --yellow:#edd945; --ink:#2b2b2d; --muted:#6b6f76;
+    --line:#e4e6ea; --bg:#f7f8fa; --white:#ffffff;
+    --font-display:"Montserrat",sans-serif; --font-body:"Montserrat",sans-serif;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:var(--font-body);
-    line-height:1.5;
-  }
+  body{background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.5;}
   a{color:inherit;}
 
-  /* ---------- Header ---------- */
-  /* Sfondo chiaro per rispettare la regola brand: "Don't use the main logo
-     on dark backgrounds" — usiamo qui il logo primario a colori. */
-  header.site{
-    background:var(--white);
-    color:var(--ink);
-    border-bottom:1px solid var(--line);
-  }
-  .header-inner{
-    max-width:1180px;
-    margin:0 auto;
-    padding:18px 24px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:24px;
-    flex-wrap:wrap;
-  }
-  .brand{
-    display:flex;
-    align-items:center;
-    gap:14px;
-  }
-  /* Logo ufficiale: nessuna rotazione, nessun ritaglio, nessun effetto —
-     solo lo spazio di rispetto (clear space) richiesto dalle guideline. */
-  .brand img.logo{
-    height:38px;
-    width:auto;
-    display:block;
-  }
-  nav.main-nav{
-    display:flex;
-    gap:22px;
-    flex-wrap:wrap;
-    font-size:14px;
-  }
-  nav.main-nav a{
-    text-decoration:none;
-    color:var(--grey);
-    padding:6px 0;
-    border-bottom:2px solid transparent;
-    font-weight:500;
-    transition:color .15s, border-color .15s;
-  }
+  header.site{background:var(--white); border-bottom:1px solid var(--line);}
+  .header-inner{max-width:1180px; margin:0 auto; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;}
+  .brand img.logo{height:38px; width:auto; display:block;}
+  nav.main-nav{display:flex; gap:22px; flex-wrap:wrap; font-size:14px;}
+  nav.main-nav a{text-decoration:none; color:var(--grey); padding:6px 0; border-bottom:2px solid transparent; font-weight:500;}
   nav.main-nav a:hover{color:var(--navy);}
-  nav.main-nav a.active{
-    color:var(--navy);
-    border-color:var(--light-blue);
-  }
-  .lang-switch{
-    display:flex;
-    gap:2px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    overflow:hidden;
-  }
-  .lang-switch button{
-    border:none;
-    background:var(--white);
-    color:var(--muted);
-    font-family:var(--font-body);
-    font-size:12px;
-    font-weight:600;
-    padding:6px 9px;
-    cursor:pointer;
-  }
+  nav.main-nav a.active{color:var(--navy); border-color:var(--light-blue);}
+  .lang-switch{display:flex; gap:2px; border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  .lang-switch button{border:none; background:var(--white); color:var(--muted); font-family:var(--font-body); font-size:12px; font-weight:600; padding:6px 9px; cursor:pointer;}
   .lang-switch button:hover{background:var(--bg);}
-  .lang-switch button.active{
-    background:var(--navy);
-    color:var(--white);
-  }
+  .lang-switch button.active{background:var(--navy); color:var(--white);}
 
-  /* ---------- Hero ---------- */
-  .hero{
-    max-width:1180px;
-    margin:0 auto;
-    padding:46px 24px 20px;
-  }
-  .hero .eyebrow{
-    font-size:12px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--light-blue);
-    font-weight:700;
-    margin-bottom:10px;
-  }
-  .hero h1{
-    font-family:var(--font-display);
-    font-weight:700;
-    font-size:clamp(28px,4vw,40px);
-    margin:0 0 10px;
-    color:var(--navy);
-  }
-  .hero p{
-    color:var(--muted);
-    max-width:640px;
-    margin:0;
-    font-size:15px;
-  }
+  .hero{max-width:1180px; margin:0 auto; padding:40px 24px 16px;}
+  .hero .eyebrow{font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--light-blue); font-weight:700; margin-bottom:10px;}
+  .hero h1{font-weight:700; font-size:clamp(26px,4vw,36px); margin:0 0 8px; color:var(--navy);}
+  .hero p{color:var(--muted); max-width:640px; margin:0; font-size:14.5px;}
 
-  /* ---------- Filtri ---------- */
-  .filters{
-    max-width:1180px;
-    margin:28px auto 0;
-    padding:0 24px;
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:12px;
-  }
+  .filters{max-width:1180px; margin:22px auto 0; padding:0 24px; display:grid; grid-template-columns:repeat(5,1fr); gap:10px;}
   @media (max-width:900px){ .filters{grid-template-columns:repeat(2,1fr);} }
-  .filters select, .filters input{
-    width:100%;
-    padding:10px 12px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    background:var(--white);
-    font-family:var(--font-body);
-    font-size:13.5px;
-    color:var(--ink);
-  }
-  .filters select:focus, .filters input:focus{
-    outline:2px solid var(--light-blue);
-    outline-offset:1px;
-  }
+  .filters select, .filters input{width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:6px; background:var(--white); font-family:var(--font-body); font-size:13px;}
 
-  /* ---------- Griglia eventi ---------- */
-  .results-meta{
-    max-width:1180px;
-    margin:22px auto 0;
-    padding:0 24px;
-    font-size:13px;
-    color:var(--muted);
+  .view-tabs{max-width:1180px; margin:20px auto 0; padding:0 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  .view-tabs .tabs{display:flex; gap:6px;}
+  .view-tabs .tabs button{
+    border:1px solid var(--line); background:var(--white); color:var(--muted);
+    padding:7px 14px; border-radius:20px; font-family:var(--font-body); font-size:13px; font-weight:600; cursor:pointer;
   }
-  .grid{
-    max-width:1180px;
-    margin:14px auto 60px;
-    padding:0 24px;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
-  }
-  @media (max-width:960px){ .grid{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:640px){ .grid{grid-template-columns:1fr;} }
+  .view-tabs .tabs button.active{background:var(--navy); color:var(--white); border-color:var(--navy);}
+  .cal-nav{display:flex; align-items:center; gap:10px; font-size:14px; font-weight:600; color:var(--navy);}
+  .cal-nav button{border:1px solid var(--line); background:var(--white); border-radius:6px; width:30px; height:30px; cursor:pointer; font-size:14px; color:var(--navy);}
+  .cal-nav button:hover{border-color:var(--light-blue);}
+  .cal-nav .today-btn{width:auto; padding:0 12px; font-size:12.5px;}
 
-  .card{
-    background:var(--white);
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:20px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    position:relative;
-  }
-  .badge{
-    display:inline-block;
-    font-size:10.5px;
-    text-transform:uppercase;
-    letter-spacing:.06em;
-    font-weight:700;
-    padding:3px 9px;
-    border-radius:20px;
-    width:fit-content;
-  }
-  .badge.type-academy{background:#e7edf7;color:var(--navy);}
-  .badge.type-club_event{background:#eef3ee;color:#3f6b4a;}
-  .badge.type-fair{background:#eaf3fb;color:var(--light-blue);}
+  .content-area{max-width:1180px; margin:18px auto 60px; padding:0 24px;}
+  .results-meta{font-size:13px; color:var(--muted); margin-bottom:14px;}
 
-  .badge.skal-booth{
-    background:var(--yellow);
-    color:#5a4d00;
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
+  /* ---------- List / Day rows ---------- */
+  .event-row{
+    display:flex; gap:16px; background:var(--white); border:1px solid var(--line);
+    border-radius:10px; padding:14px; margin-bottom:12px; cursor:pointer; text-decoration:none; color:inherit;
   }
+  .event-row:hover{border-color:var(--light-blue);}
+  .row-thumb{
+    width:150px; height:100px; border-radius:8px; flex-shrink:0; object-fit:cover; background:var(--bg);
+  }
+  .row-thumb-fallback{
+    width:150px; height:100px; border-radius:8px; flex-shrink:0;
+    background:linear-gradient(135deg, var(--navy), var(--light-blue));
+    display:flex; align-items:center; justify-content:center; color:var(--white);
+    font-weight:700; font-size:13px; text-align:center; letter-spacing:.03em;
+  }
+  .row-body{flex:1; min-width:0;}
+  .row-badges{display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap;}
+  .badge{font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; padding:2px 8px; border-radius:20px;}
+  .badge.type-academy{background:#e7edf7; color:var(--navy);}
+  .badge.type-club_event{background:#eef3ee; color:#3f6b4a;}
+  .badge.type-fair{background:#eaf3fb; color:var(--light-blue);}
+  .badge.skal-booth{background:var(--yellow); color:#5a4d00;}
+  .row-body h3{margin:0 0 4px; font-size:15.5px; color:var(--navy); font-weight:600;}
+  .row-meta{font-size:12.5px; color:var(--muted);}
+  .row-desc{font-size:13px; color:var(--ink); margin-top:6px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
 
-  .card h3{
-    font-family:var(--font-display);
-    font-weight:600;
-    font-size:17px;
-    margin:0;
-    color:var(--navy);
-    line-height:1.3;
+  /* ---------- Month calendar ---------- */
+  .cal-month-label{text-align:center; font-weight:700; color:var(--navy); font-size:16px; margin-bottom:14px;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+  .cal-weekday{text-align:center; font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:600; padding-bottom:6px;}
+  .cal-cell{
+    background:var(--white); border:1px solid var(--line); border-radius:8px; min-height:76px;
+    padding:6px; cursor:pointer; font-size:12.5px; color:var(--ink);
   }
-  .card .meta-line{
-    font-size:12.5px;
-    color:var(--muted);
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-  }
-  .card .desc{
-    font-size:13.5px;
-    color:var(--ink);
-    flex-grow:1;
-  }
-  .card .topics{
-    display:flex;flex-wrap:wrap;gap:6px;
-  }
-  .card .topics span{
-    font-size:11px;
-    background:var(--bg);
-    border:1px solid var(--line);
-    padding:2px 8px;
-    border-radius:20px;
-    color:var(--muted);
-  }
-  .card .actions{
-    display:flex;
-    gap:8px;
-    margin-top:6px;
-    flex-wrap:wrap;
-  }
-  .card .actions a{
-    font-size:12.5px;
-    text-decoration:none;
-    padding:8px 12px;
-    border-radius:6px;
-    border:1px solid var(--line);
-    color:var(--navy);
-    font-weight:600;
-  }
-  .card .actions a.primary{
-    background:var(--navy);
-    color:var(--white);
-    border-color:var(--navy);
-  }
+  .cal-cell:hover{border-color:var(--light-blue);}
+  .cal-cell.other-month{opacity:.35;}
+  .cal-cell.is-today{border-color:var(--navy); border-width:2px;}
+  .cal-cell .cal-day-num{font-weight:700; margin-bottom:4px;}
+  .cal-dot-row{display:flex; gap:3px; flex-wrap:wrap;}
+  .cal-dot{width:6px; height:6px; border-radius:50%; background:var(--light-blue);}
+  .cal-count{font-size:10.5px; color:var(--muted); margin-top:2px;}
 
-  .empty-state, .loading-state{
-    max-width:1180px;
-    margin:40px auto;
-    padding:0 24px;
-    text-align:center;
-    color:var(--muted);
-    font-size:14px;
-  }
+  .empty-state{text-align:center; color:var(--muted); font-size:14px; padding:30px 0;}
 
-  /* ---------- Footer ---------- */
-  /* Niente logo qui: lo sfondo scuro violerebbe la regola brand sul logo
-     principale. Solo testo, come da guideline "Grey 80%" su chiaro sarebbe
-     l'alternativa; qui usiamo un footer scuro puramente testuale. */
-  footer.site{
-    background:var(--navy);
-    color:rgba(255,255,255,.75);
-    font-size:13px;
-    margin-top:auto;
-  }
-  .footer-inner{
-    max-width:1180px;
-    margin:0 auto;
-    padding:30px 24px;
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
-    flex-wrap:wrap;
-  }
-  .footer-inner a{color:rgba(255,255,255,.75);text-decoration:none;}
+  footer.site{background:var(--navy); color:rgba(255,255,255,.75); font-size:13px; margin-top:auto;}
+  .footer-inner{max-width:1180px; margin:0 auto; padding:30px 24px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .footer-inner a{color:rgba(255,255,255,.75); text-decoration:none;}
   .footer-inner a:hover{color:var(--white);}
-  .footer-links{display:flex;gap:16px;flex-wrap:wrap;}
+  .footer-links{display:flex; gap:16px; flex-wrap:wrap;}
 </style>
 </head>
 <body>
@@ -323,7 +133,7 @@
 <section class="hero">
   <div class="eyebrow" data-i18n="eyebrow">Skål Europe · Connecting Tourism Globally</div>
   <h1 data-i18n="title">Eventi Skål Europe</h1>
-  <p data-i18n="subtitle">Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti. Filtra per club, nazione, tipo di evento e argomento.</p>
+  <p data-i18n="subtitle">Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti.</p>
 </section>
 
 <div class="filters">
@@ -339,8 +149,30 @@
   <input id="fSearch" type="text" data-i18n-placeholder="searchPlaceholder" placeholder="Cerca per titolo…">
 </div>
 
-<div class="results-meta" id="resultsMeta" data-i18n="loading">Caricamento eventi…</div>
-<div class="grid" id="grid"></div>
+<div class="view-tabs">
+  <div class="tabs">
+    <button data-view="list" class="active" data-i18n="viewList">List</button>
+    <button data-view="month" data-i18n="viewMonth">Month</button>
+    <button data-view="day" data-i18n="viewDay">Day</button>
+  </div>
+  <div class="cal-nav" id="calNav" style="display:none;">
+    <button id="navPrev">‹</button>
+    <span id="navLabel"></span>
+    <button id="navNext">›</button>
+    <button class="today-btn" id="navToday" data-i18n="today">Today</button>
+  </div>
+</div>
+
+<div class="content-area">
+  <div class="results-meta" id="resultsMeta" data-i18n="loading">Caricamento eventi…</div>
+  <div id="listView"></div>
+  <div id="monthView" style="display:none;">
+    <div class="cal-month-label" id="calMonthLabel"></div>
+    <div class="cal-grid" id="calWeekdays"></div>
+    <div class="cal-grid" id="calGrid" style="margin-top:4px;"></div>
+  </div>
+  <div id="dayView" style="display:none;"></div>
+</div>
 
 <footer class="site">
   <div class="footer-inner">
@@ -356,90 +188,59 @@
 
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-  // ============================================================
-  // CONFIGURAZIONE — sostituisci con i valori del tuo progetto
-  // ============================================================
-  const SUPABASE_URL = 'https://fbtxpgxblbfjkezbsdqv.supabase.co';
-  const SUPABASE_ANON_KEY = 'sb_publishable__0-aMEvhSZn3ppXk4a50ZA_RtfBW-Rc';
-  // ============================================================
+  import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ============================================================
-  // TRADUZIONI — 5 lingue: EN, FR, IT, DE, ES
+  // TRANSLATIONS
   // ============================================================
   const translations = {
-    en: {
-      eyebrow: "Skål Europe · Connecting Tourism Globally",
-      title: "Skål Europe Events",
-      subtitle: "Academies, Club events and the main European tourism trade fairs — with Skål booths highlighted where present. Filter by club, country, event type and topic.",
-      filterAllTypes: "All types", typeAcademy: "Academy", typeClub: "Club event", typeFair: "Trade fair",
-      filterAllCountries: "All countries", filterAllClubs: "All clubs", filterAllTopics: "All topics",
-      searchPlaceholder: "Search by title…",
-      loading: "Loading events…", noResults: "No events found with these filters.",
-      resultsCount: n => `${n} events found`, loadError: "Error loading events.",
-      modeOnline: "Online", modeHybrid: "Hybrid", modeInPerson: "In person",
-      officialSite: "Official site", register: "Register", addCalendar: "+ Calendar",
-      skalBooth: "Skål booth", footerText: "© 2026 Skål Europe — events platform",
-      locale: "en-GB"
-    },
-    fr: {
-      eyebrow: "Skål Europe · Connecting Tourism Globally",
-      title: "Événements Skål Europe",
-      subtitle: "Académies, événements de clubs et principaux salons du tourisme en Europe — avec mise en évidence des stands Skål. Filtrez par club, pays, type d'événement et sujet.",
-      filterAllTypes: "Tous les types", typeAcademy: "Académie", typeClub: "Événement de club", typeFair: "Salon",
-      filterAllCountries: "Tous les pays", filterAllClubs: "Tous les clubs", filterAllTopics: "Tous les sujets",
-      searchPlaceholder: "Rechercher par titre…",
-      loading: "Chargement des événements…", noResults: "Aucun événement trouvé avec ces filtres.",
-      resultsCount: n => `${n} événements trouvés`, loadError: "Erreur de chargement des événements.",
-      modeOnline: "En ligne", modeHybrid: "Hybride", modeInPerson: "En présentiel",
-      officialSite: "Site officiel", register: "S'inscrire", addCalendar: "+ Calendrier",
-      skalBooth: "Stand Skål", footerText: "© 2026 Skål Europe — plateforme d'événements",
-      locale: "fr-FR"
-    },
-    it: {
-      eyebrow: "Skål Europe · Connecting Tourism Globally",
-      title: "Eventi Skål Europe",
-      subtitle: "Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti. Filtra per club, nazione, tipo di evento e argomento.",
-      filterAllTypes: "Tutti i tipi", typeAcademy: "Accademia", typeClub: "Evento di club", typeFair: "Fiera",
-      filterAllCountries: "Tutte le nazioni", filterAllClubs: "Tutti i club", filterAllTopics: "Tutti gli argomenti",
-      searchPlaceholder: "Cerca per titolo…",
-      loading: "Caricamento eventi…", noResults: "Nessun evento trovato con questi filtri.",
-      resultsCount: n => `${n} eventi trovati`, loadError: "Errore nel caricamento eventi.",
-      modeOnline: "Online", modeHybrid: "Ibrido", modeInPerson: "In presenza",
-      officialSite: "Sito ufficiale", register: "Registrati", addCalendar: "+ Calendario",
-      skalBooth: "Stand Skål", footerText: "© 2026 Skål Europe — piattaforma eventi",
-      locale: "it-IT"
-    },
-    de: {
-      eyebrow: "Skål Europe · Connecting Tourism Globally",
-      title: "Skål Europe Veranstaltungen",
-      subtitle: "Akademien, Club-Veranstaltungen und die wichtigsten Tourismusmessen Europas — mit Hervorhebung der Skål-Stände. Filtern Sie nach Club, Land, Veranstaltungstyp und Thema.",
-      filterAllTypes: "Alle Typen", typeAcademy: "Akademie", typeClub: "Club-Veranstaltung", typeFair: "Messe",
-      filterAllCountries: "Alle Länder", filterAllClubs: "Alle Clubs", filterAllTopics: "Alle Themen",
-      searchPlaceholder: "Nach Titel suchen…",
-      loading: "Veranstaltungen werden geladen…", noResults: "Keine Veranstaltungen mit diesen Filtern gefunden.",
-      resultsCount: n => `${n} Veranstaltungen gefunden`, loadError: "Fehler beim Laden der Veranstaltungen.",
-      modeOnline: "Online", modeHybrid: "Hybrid", modeInPerson: "Vor Ort",
-      officialSite: "Offizielle Website", register: "Anmelden", addCalendar: "+ Kalender",
-      skalBooth: "Skål-Stand", footerText: "© 2026 Skål Europe — Veranstaltungsplattform",
-      locale: "de-DE"
-    },
-    es: {
-      eyebrow: "Skål Europe · Connecting Tourism Globally",
-      title: "Eventos Skål Europe",
-      subtitle: "Academias, eventos de clubes y las principales ferias de turismo en Europa — con los stands de Skål destacados donde estén presentes. Filtra por club, país, tipo de evento y tema.",
-      filterAllTypes: "Todos los tipos", typeAcademy: "Academia", typeClub: "Evento de club", typeFair: "Feria",
-      filterAllCountries: "Todos los países", filterAllClubs: "Todos los clubes", filterAllTopics: "Todos los temas",
-      searchPlaceholder: "Buscar por título…",
-      loading: "Cargando eventos…", noResults: "No se encontraron eventos con estos filtros.",
-      resultsCount: n => `${n} eventos encontrados`, loadError: "Error al cargar los eventos.",
-      modeOnline: "En línea", modeHybrid: "Híbrido", modeInPerson: "Presencial",
-      officialSite: "Sitio oficial", register: "Inscribirse", addCalendar: "+ Calendario",
-      skalBooth: "Stand de Skål", footerText: "© 2026 Skål Europe — plataforma de eventos",
-      locale: "es-ES"
-    }
+    en: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Skål Europe Events",
+      subtitle:"Academies, Club events and the main European tourism trade fairs — with Skål booths highlighted where present.",
+      filterAllTypes:"All types", typeAcademy:"Academy", typeClub:"Club event", typeFair:"Trade fair",
+      filterAllCountries:"All countries", filterAllClubs:"All clubs", filterAllTopics:"All topics",
+      searchPlaceholder:"Search by title…", loading:"Loading events…", noResults:"No events found.",
+      resultsCount:n=>`${n} events found`, loadError:"Error loading events.",
+      modeOnline:"Online", modeHybrid:"Hybrid", modeInPerson:"In person", skalBooth:"Skål booth",
+      footerText:"© 2026 Skål Europe — events platform", locale:"en-GB",
+      viewList:"List", viewMonth:"Month", viewDay:"Day", today:"Today" },
+    fr: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Événements Skål Europe",
+      subtitle:"Académies, événements de clubs et principaux salons du tourisme en Europe — avec mise en évidence des stands Skål.",
+      filterAllTypes:"Tous les types", typeAcademy:"Académie", typeClub:"Événement de club", typeFair:"Salon",
+      filterAllCountries:"Tous les pays", filterAllClubs:"Tous les clubs", filterAllTopics:"Tous les sujets",
+      searchPlaceholder:"Rechercher par titre…", loading:"Chargement…", noResults:"Aucun événement trouvé.",
+      resultsCount:n=>`${n} événements trouvés`, loadError:"Erreur de chargement.",
+      modeOnline:"En ligne", modeHybrid:"Hybride", modeInPerson:"En présentiel", skalBooth:"Stand Skål",
+      footerText:"© 2026 Skål Europe — plateforme d'événements", locale:"fr-FR",
+      viewList:"Liste", viewMonth:"Mois", viewDay:"Jour", today:"Aujourd'hui" },
+    it: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Eventi Skål Europe",
+      subtitle:"Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti.",
+      filterAllTypes:"Tutti i tipi", typeAcademy:"Accademia", typeClub:"Evento di club", typeFair:"Fiera",
+      filterAllCountries:"Tutte le nazioni", filterAllClubs:"Tutti i club", filterAllTopics:"Tutti gli argomenti",
+      searchPlaceholder:"Cerca per titolo…", loading:"Caricamento eventi…", noResults:"Nessun evento trovato.",
+      resultsCount:n=>`${n} eventi trovati`, loadError:"Errore nel caricamento eventi.",
+      modeOnline:"Online", modeHybrid:"Ibrido", modeInPerson:"In presenza", skalBooth:"Stand Skål",
+      footerText:"© 2026 Skål Europe — piattaforma eventi", locale:"it-IT",
+      viewList:"Lista", viewMonth:"Mese", viewDay:"Giorno", today:"Oggi" },
+    de: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Skål Europe Veranstaltungen",
+      subtitle:"Akademien, Club-Veranstaltungen und die wichtigsten Tourismusmessen Europas — mit Hervorhebung der Skål-Stände.",
+      filterAllTypes:"Alle Typen", typeAcademy:"Akademie", typeClub:"Club-Veranstaltung", typeFair:"Messe",
+      filterAllCountries:"Alle Länder", filterAllClubs:"Alle Clubs", filterAllTopics:"Alle Themen",
+      searchPlaceholder:"Nach Titel suchen…", loading:"Wird geladen…", noResults:"Keine Veranstaltungen gefunden.",
+      resultsCount:n=>`${n} Veranstaltungen gefunden`, loadError:"Fehler beim Laden.",
+      modeOnline:"Online", modeHybrid:"Hybrid", modeInPerson:"Vor Ort", skalBooth:"Skål-Stand",
+      footerText:"© 2026 Skål Europe — Veranstaltungsplattform", locale:"de-DE",
+      viewList:"Liste", viewMonth:"Monat", viewDay:"Tag", today:"Heute" },
+    es: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Eventos Skål Europe",
+      subtitle:"Academias, eventos de clubes y las principales ferias de turismo en Europa — con los stands de Skål destacados.",
+      filterAllTypes:"Todos los tipos", typeAcademy:"Academia", typeClub:"Evento de club", typeFair:"Feria",
+      filterAllCountries:"Todos los países", filterAllClubs:"Todos los clubes", filterAllTopics:"Todos los temas",
+      searchPlaceholder:"Buscar por título…", loading:"Cargando…", noResults:"No se encontraron eventos.",
+      resultsCount:n=>`${n} eventos encontrados`, loadError:"Error al cargar.",
+      modeOnline:"En línea", modeHybrid:"Híbrido", modeInPerson:"Presencial", skalBooth:"Stand de Skål",
+      footerText:"© 2026 Skål Europe — plataforma de eventos", locale:"es-ES",
+      viewList:"Lista", viewMonth:"Mes", viewDay:"Día", today:"Hoy" }
   };
 
   function detectInitialLang(){
@@ -448,145 +249,224 @@
     const browser = (navigator.language || 'en').slice(0,2);
     return translations[browser] ? browser : 'en';
   }
-
   let currentLang = detectInitialLang();
-  let lastEvents = [];
-
   function t(key){ return translations[currentLang][key]; }
 
   function applyStaticTranslations(){
     document.documentElement.lang = currentLang;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-      el.textContent = t(el.getAttribute('data-i18n'));
-    });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
-    });
-    document.querySelectorAll('#langSwitch button').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.lang === currentLang);
-    });
+    document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.getAttribute('data-i18n')));
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = t(el.getAttribute('data-i18n-placeholder')));
+    document.querySelectorAll('#langSwitch button').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
   }
-
-  document.getElementById('langSwitch').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-lang]');
-    if (!btn) return;
-    currentLang = btn.dataset.lang;
-    localStorage.setItem('skal-lang', currentLang);
-    applyStaticTranslations();
-    renderEvents(lastEvents);
+  document.getElementById('langSwitch').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-lang]'); if (!btn) return;
+    currentLang = btn.dataset.lang; localStorage.setItem('skal-lang', currentLang);
+    applyStaticTranslations(); render();
   });
 
-  applyStaticTranslations();
+  // ============================================================
+  // STATE
+  // ============================================================
+  let currentView = 'list';
+  let monthCursor = startOfMonth(new Date());
+  let dayCursor = startOfDay(new Date());
+  const typeLabels = () => ({ academy:t('typeAcademy'), club_event:t('typeClub'), fair:t('typeFair') });
 
-  const grid = document.getElementById('grid');
-  const resultsMeta = document.getElementById('resultsMeta');
-  const fType = document.getElementById('fType');
-  const fCountry = document.getElementById('fCountry');
-  const fClub = document.getElementById('fClub');
-  const fTopic = document.getElementById('fTopic');
-  const fSearch = document.getElementById('fSearch');
+  const el = id => document.getElementById(id);
+  function esc(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function startOfDay(d){ const x=new Date(d); x.setHours(0,0,0,0); return x; }
+  function startOfMonth(d){ const x=new Date(d); x.setDate(1); x.setHours(0,0,0,0); return x; }
+  function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function addMonths(d,n){ const x=new Date(d); x.setMonth(x.getMonth()+n); return x; }
+  function ymd(d){ return d.toISOString().slice(0,10); }
 
-  function escapeHtml(s){
-    return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
+  // ---------- View tabs ----------
+  document.querySelectorAll('.view-tabs .tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-tabs .tabs button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      el('calNav').style.display = currentView === 'list' ? 'none' : 'flex';
+      render();
+    });
+  });
+  el('navPrev').addEventListener('click', () => {
+    if (currentView === 'month') monthCursor = addMonths(monthCursor, -1);
+    else dayCursor = addDays(dayCursor, -1);
+    render();
+  });
+  el('navNext').addEventListener('click', () => {
+    if (currentView === 'month') monthCursor = addMonths(monthCursor, 1);
+    else dayCursor = addDays(dayCursor, 1);
+    render();
+  });
+  el('navToday').addEventListener('click', () => {
+    monthCursor = startOfMonth(new Date()); dayCursor = startOfDay(new Date()); render();
+  });
 
-  function typeLabels(){
-    return { academy: t('typeAcademy'), club_event: t('typeClub'), fair: t('typeFair') };
-  }
-
-  function formatDate(d){
-    return new Date(d).toLocaleDateString(t('locale'), { day:'2-digit', month:'short', year:'numeric' });
-  }
-
-  function buildIcsLink(ev){
-    const start = new Date(ev.start_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
-    const end = ev.end_date ? new Date(ev.end_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z' : start;
-    const body = [
-      'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
-      `SUMMARY:${ev.title.replace(/\n/g,' ')}`,
-      `DTSTART:${start}`,`DTEND:${end}`,
-      `DESCRIPTION:${(ev.description||'').replace(/\n/g,' ')}`,
-      'END:VEVENT','END:VCALENDAR'
-    ].join('\r\n');
-    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(body);
-  }
-
-  function renderEvents(events){
-    lastEvents = events;
-    if (!events.length){
-      grid.innerHTML = '';
-      resultsMeta.textContent = t('noResults');
-      return;
-    }
-    resultsMeta.textContent = t('resultsCount')(events.length);
-    const labels = typeLabels();
-    grid.innerHTML = events.map(ev => `
-      <div class="card">
-        <span class="badge type-${ev.type}">${labels[ev.type] || ev.type}</span>
-        ${ev.type === 'fair' && ev.has_skal_booth ? `<span class="badge skal-booth">★ ${t('skalBooth')}${ev.booth_details ? ' · ' + escapeHtml(ev.booth_details) : ''}</span>` : ''}
-        <h3>${escapeHtml(ev.title)}</h3>
-        <div class="meta-line">
-          <span>${formatDate(ev.start_date)}</span>
-          ${ev.clubs ? `<span>· ${escapeHtml(ev.clubs.name)}</span>` : ''}
-          ${ev.countries ? `<span>· ${escapeHtml(ev.countries.name)}</span>` : ''}
-          <span>· ${ev.mode === 'online' ? t('modeOnline') : ev.mode === 'hybrid' ? t('modeHybrid') : t('modeInPerson')}</span>
-        </div>
-        ${ev.description ? `<div class="desc">${escapeHtml(ev.description.slice(0,140))}${ev.description.length>140?'…':''}</div>` : ''}
-        <div class="actions">
-          ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">${t('officialSite')}</a>` : ''}
-          ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">${t('register')}</a>` : ''}
-          <a href="${buildIcsLink(ev)}" download="evento.ics">${t('addCalendar')}</a>
-        </div>
-      </div>
-    `).join('');
-  }
-
+  // ---------- Filters ----------
   async function loadFilterOptions(){
     const [{ data: countries }, { data: clubs }, { data: topics }] = await Promise.all([
       supabase.from('countries').select('id,name').order('name'),
       supabase.from('clubs').select('id,name').order('name'),
       supabase.from('topics').select('id,name').order('name')
     ]);
-    (countries||[]).forEach(c => fCountry.insertAdjacentHTML('beforeend', `<option value="${c.id}">${escapeHtml(c.name)}</option>`));
-    (clubs||[]).forEach(c => fClub.insertAdjacentHTML('beforeend', `<option value="${c.id}">${escapeHtml(c.name)}</option>`));
-    (topics||[]).forEach(t => fTopic.insertAdjacentHTML('beforeend', `<option value="${t.id}">${escapeHtml(t.name)}</option>`));
+    (countries||[]).forEach(c => el('fCountry').insertAdjacentHTML('beforeend', `<option value="${c.id}">${esc(c.name)}</option>`));
+    (clubs||[]).forEach(c => el('fClub').insertAdjacentHTML('beforeend', `<option value="${c.id}">${esc(c.name)}</option>`));
+    (topics||[]).forEach(tp => el('fTopic').insertAdjacentHTML('beforeend', `<option value="${tp.id}">${esc(tp.name)}</option>`));
+  }
+  [el('fType'), el('fCountry'), el('fClub'), el('fTopic')].forEach(x => x.addEventListener('change', render));
+  el('fSearch').addEventListener('input', () => { clearTimeout(window._deb); window._deb = setTimeout(render, 300); });
+
+  function baseQuery(){
+    let q = supabase.from('events').select('*, clubs(name), countries(name), event_topics(topic_id)').eq('status','published');
+    if (el('fType').value) q = q.eq('type', el('fType').value);
+    if (el('fCountry').value) q = q.eq('country_id', el('fCountry').value);
+    if (el('fClub').value) q = q.eq('club_id', el('fClub').value);
+    if (el('fSearch').value.trim()) q = q.ilike('title', `%${el('fSearch').value.trim()}%`);
+    return q;
+  }
+  function applyTopicFilter(events){
+    if (!el('fTopic').value) return events;
+    return events.filter(ev => ev.event_topics?.some(x => String(x.topic_id) === el('fTopic').value));
   }
 
-  async function loadEvents(){
-    resultsMeta.textContent = t('loading');
-    let query = supabase
-      .from('events')
-      .select('*, clubs(name), countries(name), event_topics(topic_id)')
-      .eq('status', 'published')
+  // ---------- Row rendering (shared by List and Day) ----------
+  function eventRowHtml(ev){
+    const labels = typeLabels();
+    const dateStr = new Date(ev.start_date).toLocaleString(t('locale'), { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+    const thumb = ev.image_url
+      ? `<img class="row-thumb" src="${esc(ev.image_url)}" alt="">`
+      : `<div class="row-thumb-fallback">SKÅL<br>${labels[ev.type]}</div>`;
+    return `
+      <a class="event-row" href="event.html?id=${ev.id}">
+        ${thumb}
+        <div class="row-body">
+          <div class="row-badges">
+            <span class="badge type-${ev.type}">${labels[ev.type]}</span>
+            ${ev.type === 'fair' && ev.has_skal_booth ? `<span class="badge skal-booth">★ ${t('skalBooth')}</span>` : ''}
+          </div>
+          <h3>${esc(ev.title)}</h3>
+          <div class="row-meta">
+            ${dateStr}
+            ${ev.clubs ? ' · ' + esc(ev.clubs.name) : (ev.countries ? ' · ' + esc(ev.countries.name) : '')}
+            · ${ev.mode==='online'?t('modeOnline'):ev.mode==='hybrid'?t('modeHybrid'):t('modeInPerson')}
+          </div>
+          ${ev.description ? `<div class="row-desc">${esc(ev.description)}</div>` : ''}
+        </div>
+      </a>`;
+  }
+
+  // ---------- LIST view: next 10 upcoming ----------
+  async function renderList(){
+    el('listView').style.display = 'block';
+    el('monthView').style.display = 'none';
+    el('dayView').style.display = 'none';
+
+    const { data, error } = await baseQuery()
+      .gte('start_date', new Date().toISOString())
+      .order('start_date', { ascending: true })
+      .limit(10);
+
+    if (error){ el('resultsMeta').textContent = t('loadError'); console.error(error); return; }
+    const events = applyTopicFilter(data || []);
+    el('resultsMeta').textContent = events.length ? t('resultsCount')(events.length) : t('noResults');
+    el('listView').innerHTML = events.map(eventRowHtml).join('') || `<div class="empty-state">${t('noResults')}</div>`;
+  }
+
+  // ---------- DAY view ----------
+  async function renderDay(){
+    el('listView').style.display = 'none';
+    el('monthView').style.display = 'none';
+    el('dayView').style.display = 'block';
+    el('navLabel').textContent = dayCursor.toLocaleDateString(t('locale'), { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+
+    const dayEnd = addDays(dayCursor, 1);
+    const { data, error } = await baseQuery()
+      .gte('start_date', dayCursor.toISOString())
+      .lt('start_date', dayEnd.toISOString())
       .order('start_date', { ascending: true });
 
-    if (fType.value) query = query.eq('type', fType.value);
-    if (fCountry.value) query = query.eq('country_id', fCountry.value);
-    if (fClub.value) query = query.eq('club_id', fClub.value);
-    if (fSearch.value.trim()) query = query.ilike('title', `%${fSearch.value.trim()}%`);
-
-    const { data, error } = await query;
-    if (error){
-      resultsMeta.textContent = t('loadError');
-      console.error(error);
-      return;
-    }
-
-    let filtered = data || [];
-    if (fTopic.value){
-      filtered = filtered.filter(ev => ev.event_topics?.some(et => String(et.topic_id) === fTopic.value));
-    }
-    renderEvents(filtered);
+    if (error){ el('resultsMeta').textContent = t('loadError'); console.error(error); return; }
+    const events = applyTopicFilter(data || []);
+    el('resultsMeta').textContent = events.length ? t('resultsCount')(events.length) : t('noResults');
+    el('dayView').innerHTML = events.map(eventRowHtml).join('') || `<div class="empty-state">${t('noResults')}</div>`;
   }
 
-  [fType, fCountry, fClub, fTopic].forEach(el => el.addEventListener('change', loadEvents));
-  fSearch.addEventListener('input', () => {
-    clearTimeout(window._searchDebounce);
-    window._searchDebounce = setTimeout(loadEvents, 300);
-  });
+  // ---------- MONTH view ----------
+  async function renderMonth(){
+    el('listView').style.display = 'none';
+    el('monthView').style.display = 'block';
+    el('dayView').style.display = 'none';
+    el('navLabel').textContent = monthCursor.toLocaleDateString(t('locale'), { month:'long', year:'numeric' });
+    el('calMonthLabel').textContent = monthCursor.toLocaleDateString(t('locale'), { month:'long', year:'numeric' });
 
-  loadFilterOptions();
-  loadEvents();
+    // Grid: Monday-start, includes leading/trailing days to fill full weeks
+    const firstOfMonth = monthCursor;
+    const jsWeekday = firstOfMonth.getDay(); // 0=Sun
+    const leading = (jsWeekday + 6) % 7; // days before Monday
+    const gridStart = addDays(firstOfMonth, -leading);
+    const daysInMonth = new Date(firstOfMonth.getFullYear(), firstOfMonth.getMonth()+1, 0).getDate();
+    const totalCells = Math.ceil((leading + daysInMonth) / 7) * 7;
+    const gridEnd = addDays(gridStart, totalCells);
+
+    // Weekday header, locale-aware, no manual translation needed
+    const refWeekStart = new Date(2024,0,1); // a known Monday
+    el('calWeekdays').innerHTML = Array.from({length:7}, (_,i) =>
+      `<div class="cal-weekday">${addDays(refWeekStart,i).toLocaleDateString(t('locale'),{weekday:'short'})}</div>`
+    ).join('');
+
+    const { data, error } = await baseQuery()
+      .gte('start_date', gridStart.toISOString())
+      .lt('start_date', gridEnd.toISOString());
+
+    if (error){ el('resultsMeta').textContent = t('loadError'); console.error(error); return; }
+    const events = applyTopicFilter(data || []);
+    el('resultsMeta').textContent = t('resultsCount')(events.length);
+
+    const byDay = {};
+    events.forEach(ev => {
+      const key = ymd(new Date(ev.start_date));
+      (byDay[key] = byDay[key] || []).push(ev);
+    });
+
+    const today = ymd(new Date());
+    let html = '';
+    for (let i = 0; i < totalCells; i++){
+      const cellDate = addDays(gridStart, i);
+      const key = ymd(cellDate);
+      const inMonth = cellDate.getMonth() === firstOfMonth.getMonth();
+      const dayEvents = byDay[key] || [];
+      html += `
+        <div class="cal-cell ${inMonth?'':'other-month'} ${key===today?'is-today':''}" data-date="${key}">
+          <div class="cal-day-num">${cellDate.getDate()}</div>
+          ${dayEvents.length ? `
+            <div class="cal-dot-row">${dayEvents.slice(0,4).map(()=>'<span class="cal-dot"></span>').join('')}</div>
+            <div class="cal-count">${dayEvents.length}</div>
+          ` : ''}
+        </div>`;
+    }
+    el('calGrid').innerHTML = html;
+    el('calGrid').querySelectorAll('.cal-cell').forEach(cell => {
+      cell.addEventListener('click', () => {
+        dayCursor = startOfDay(new Date(cell.dataset.date + 'T00:00:00'));
+        currentView = 'day';
+        document.querySelectorAll('.view-tabs .tabs button').forEach(b => b.classList.toggle('active', b.dataset.view === 'day'));
+        el('calNav').style.display = 'flex';
+        render();
+      });
+    });
+  }
+
+  function render(){
+    if (currentView === 'list') renderList();
+    else if (currentView === 'month') renderMonth();
+    else renderDay();
+  }
+
+  applyStaticTranslations();
+  await loadFilterOptions();
+  render();
 </script>
 
 </body>

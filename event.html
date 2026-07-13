@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event details — Skål Europe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#314691; --light-blue:#65a8de; --grey:#59595b;
+    --yellow:#edd945; --ink:#2b2b2d; --muted:#6b6f76;
+    --line:#e4e6ea; --bg:#f7f8fa; --white:#ffffff;
+    --font:"Montserrat",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:var(--font); line-height:1.55;}
+  a{color:inherit;}
+
+  header.site{background:var(--white); border-bottom:1px solid var(--line);}
+  .header-inner{max-width:900px; margin:0 auto; padding:18px 24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;}
+  .brand img.logo{height:38px; width:auto; display:block;}
+  .back-link{font-size:13px; font-weight:600; color:var(--navy); text-decoration:none;}
+  .back-link:hover{color:var(--light-blue);}
+
+  main{max-width:900px; margin:0 auto; padding:28px 24px 60px;}
+
+  .hero-image{width:100%; max-height:380px; object-fit:cover; border-radius:12px; margin-bottom:24px; display:block;}
+  .hero-image-fallback{
+    width:100%; height:220px; border-radius:12px; margin-bottom:24px;
+    background:linear-gradient(135deg, var(--navy), var(--light-blue));
+    display:flex; align-items:center; justify-content:center; color:var(--white);
+    font-weight:700; font-size:22px; letter-spacing:.04em;
+  }
+
+  .badges{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .badge{font-size:11px; text-transform:uppercase; letter-spacing:.05em; font-weight:700; padding:3px 10px; border-radius:20px;}
+  .badge.type-academy{background:#e7edf7; color:var(--navy);}
+  .badge.type-club_event{background:#eef3ee; color:#3f6b4a;}
+  .badge.type-fair{background:#eaf3fb; color:var(--light-blue);}
+  .badge.skal-booth{background:var(--yellow); color:#5a4d00;}
+
+  h1{font-size:clamp(24px,4vw,32px); color:var(--navy); margin:0 0 14px; font-weight:700;}
+
+  .meta-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:14px;
+    background:var(--white); border:1px solid var(--line); border-radius:10px; padding:18px; margin-bottom:24px;
+  }
+  @media (max-width:600px){ .meta-grid{grid-template-columns:1fr;} }
+  .meta-item .label{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; margin-bottom:3px;}
+  .meta-item .value{font-size:14px; color:var(--ink);}
+
+  .description{font-size:15px; margin-bottom:28px; white-space:pre-wrap;}
+
+  .actions{display:flex; gap:10px; flex-wrap:wrap;}
+  .actions a{
+    text-decoration:none; padding:11px 18px; border-radius:6px; font-size:14px; font-weight:600;
+    border:1px solid var(--line); color:var(--navy);
+  }
+  .actions a.primary{background:var(--navy); color:var(--white); border-color:var(--navy);}
+
+  .state-msg{text-align:center; color:var(--muted); font-size:14px; padding:60px 0;}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <div class="brand">
+      <a href="https://www.skaleurope.org/"><img class="logo" src="logo-skal-europe.png" alt="Skål International Europe"></a>
+    </div>
+    <a class="back-link" href="index.html">← Back to events</a>
+  </div>
+</header>
+
+<main id="main">
+  <div class="state-msg" id="stateMsg">Loading event…</div>
+</main>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const main = document.getElementById('main');
+
+  const typeLabels = { academy: 'Academy', club_event: 'Club event', fair: 'Trade fair' };
+  const modeLabels = { online: 'Online', hybrid: 'Hybrid', in_person: 'In person' };
+
+  function esc(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function formatRange(start, end){
+    const opts = { weekday:'long', day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
+    const s = new Date(start).toLocaleString('en-GB', opts);
+    if (!end) return s;
+    const e = new Date(end).toLocaleString('en-GB', opts);
+    return `${s} → ${e}`;
+  }
+
+  function buildIcsLink(ev){
+    const start = new Date(ev.start_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+    const end = ev.end_date ? new Date(ev.end_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z' : start;
+    const body = [
+      'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+      `SUMMARY:${ev.title.replace(/\n/g,' ')}`,
+      `DTSTART:${start}`, `DTEND:${end}`,
+      `DESCRIPTION:${(ev.description||'').replace(/\n/g,' ')}`,
+      'END:VEVENT','END:VCALENDAR'
+    ].join('\r\n');
+    return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(body);
+  }
+
+  async function load(){
+    const id = new URLSearchParams(window.location.search).get('id');
+    if (!id){
+      main.innerHTML = '<div class="state-msg">No event specified.</div>';
+      return;
+    }
+
+    const { data: ev, error } = await supabase
+      .from('events')
+      .select('*, clubs(name), countries(name)')
+      .eq('id', id)
+      .eq('status', 'published')
+      .maybeSingle();
+
+    if (error || !ev){
+      main.innerHTML = '<div class="state-msg">Event not found, or not currently published.</div>';
+      return;
+    }
+
+    document.title = `${ev.title} — Skål Europe`;
+
+    const image = ev.image_url
+      ? `<img class="hero-image" src="${esc(ev.image_url)}" alt="${esc(ev.title)}">`
+      : `<div class="hero-image-fallback">SKÅL ${esc(typeLabels[ev.type] || ev.type)}</div>`;
+
+    main.innerHTML = `
+      ${image}
+      <div class="badges">
+        <span class="badge type-${ev.type}">${esc(typeLabels[ev.type] || ev.type)}</span>
+        ${ev.type === 'fair' && ev.has_skal_booth ? `<span class="badge skal-booth">★ Skål booth${ev.booth_details ? ' · ' + esc(ev.booth_details) : ''}</span>` : ''}
+      </div>
+      <h1>${esc(ev.title)}</h1>
+
+      <div class="meta-grid">
+        <div class="meta-item">
+          <div class="label">Date & time</div>
+          <div class="value">${formatRange(ev.start_date, ev.end_date)} (${esc(ev.timezone || 'Europe/Rome')})</div>
+        </div>
+        <div class="meta-item">
+          <div class="label">Mode</div>
+          <div class="value">${esc(modeLabels[ev.mode] || ev.mode)}</div>
+        </div>
+        ${ev.clubs ? `<div class="meta-item"><div class="label">Club</div><div class="value">${esc(ev.clubs.name)}</div></div>` : ''}
+        ${ev.countries ? `<div class="meta-item"><div class="label">Country</div><div class="value">${esc(ev.countries.name)}</div></div>` : ''}
+      </div>
+
+      ${ev.description ? `<div class="description">${esc(ev.description)}</div>` : ''}
+
+      <div class="actions">
+        ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">Official site</a>` : ''}
+        ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">Register</a>` : ''}
+        <a href="${buildIcsLink(ev)}" download="event.ics">+ Add to calendar</a>
+      </div>
+    `;
+  }
+
+  load();
+</script>
+
+</body>
+</html>
