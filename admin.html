@@ -279,6 +279,13 @@
     if (session) init(session); else showLoginGate();
   });
 
+  // Rimuove #access_token=... dalla barra indirizzi subito dopo che
+  // Supabase lo ha letto, per evitare interferenze in caso di
+  // logout/login ripetuti nella stessa tab.
+  if (window.location.hash.includes('access_token')) {
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
   function showLoginGate(){
     el('loginGate').style.display = 'block';
     el('accessDenied').style.display = 'none';
