@@ -209,16 +209,19 @@
           <input id="f_registration_url" type="url">
         </div>
         <div class="full">
-          <label>Image URL</label>
-          <input id="f_image_url" type="url" placeholder="https://…">
+          <label>Event image (PNG, JPG/JPEG or SVG)</label>
+          <input type="file" id="f_image_file" accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml">
+          <div id="imageUploadStatus" style="font-size:12px; color:var(--muted); margin-top:5px;"></div>
+          <input id="f_image_url" type="url" placeholder="…or paste an image URL directly" style="margin-top:8px;">
         </div>
         <div class="full">
           <label>Tags (comma-separated)</label>
           <input id="f_tags" placeholder="leadership, sustainability">
         </div>
         <div class="full" id="formMsg"></div>
-        <div class="full">
+        <div class="full" style="display:flex; gap:10px;">
           <button type="submit" class="btn primary" id="btnSubmit">Create event</button>
+          <button type="button" class="btn" id="btnCancelEdit" style="display:none;">Cancel edit</button>
         </div>
       </form>
     </div>
@@ -231,11 +234,19 @@
           <option value="published">Published</option>
           <option value="cancelled">Cancelled</option>
         </select>
+        <select id="filterType">
+          <option value="">All types</option>
+          <option value="academy">Academy</option>
+          <option value="club_event">Club event</option>
+          <option value="fair">Trade fair</option>
+        </select>
+        <select id="filterCountry"><option value="">All countries</option></select>
+        <select id="filterClub"><option value="">All clubs</option></select>
         <button class="btn" id="btnRefresh">Refresh</button>
       </div>
       <table>
         <thead>
-          <tr><th>Title</th><th>Type</th><th>Club / Country</th><th>Start</th><th>Status</th><th></th></tr>
+          <tr><th>Title</th><th>Type</th><th>Club / Country</th><th>Start</th><th>Status</th><th>Actions</th></tr>
         </thead>
         <tbody id="eventsTableBody"></tbody>
       </table>
@@ -252,6 +263,7 @@
   let profile = null; // { role, club_id, country_id, full_name }
   let countries = [];
   let clubs = [];
+  let editingEventId = null;
 
   const el = id => document.getElementById(id);
 
@@ -323,6 +335,11 @@
       countries.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
     el('f_club').innerHTML = '<option value="">—</option>' +
       clubs.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+
+    el('filterCountry').innerHTML = '<option value="">All countries</option>' +
+      countries.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
+    el('filterClub').innerHTML = '<option value="">All clubs</option>' +
+      clubs.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('');
   }
 
   // ---------- Scope handling for local_event_manager ----------
@@ -345,6 +362,39 @@
     }
   }
 
+  // ---------- Image upload ----------
+  const ALLOWED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
+  el('f_image_file').addEventListener('change', async () => {
+    const file = el('f_image_file').files[0];
+    const status = el('imageUploadStatus');
+    if (!file) return;
+
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      status.textContent = 'Unsupported file type. Please use PNG, JPG/JPEG or SVG.';
+      status.style.color = 'var(--danger)';
+      el('f_image_file').value = '';
+      return;
+    }
+
+    status.textContent = 'Uploading…';
+    status.style.color = 'var(--muted)';
+
+    const ext = file.name.split('.').pop();
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+    const { error: uploadErr } = await supabase.storage.from('event-images').upload(path, file, { upsert: true });
+    if (uploadErr) {
+      status.textContent = 'Upload failed: ' + uploadErr.message;
+      status.style.color = 'var(--danger)';
+      return;
+    }
+
+    const { data: pub } = supabase.storage.from('event-images').getPublicUrl(path);
+    el('f_image_url').value = pub.publicUrl;
+    status.textContent = 'Image uploaded ✓';
+    status.style.color = 'var(--success)';
+  });
+
   // ---------- Type-dependent field visibility ----------
   function updateTypeFields(){
     const type = el('f_type').value;
@@ -358,7 +408,57 @@
   el('f_has_booth').addEventListener('change', updateTypeFields);
   updateTypeFields();
 
-  // ---------- Create event ----------
+  // ---------- Edit mode helpers ----------
+  function toDatetimeLocal(iso){
+    if (!iso) return '';
+    const d = new Date(iso);
+    const pad = n => String(n).padStart(2,'0');
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function enterEditMode(ev){
+    editingEventId = ev.id;
+    el('f_type').value = ev.type;
+    el('f_status').value = ev.status;
+    el('f_title').value = ev.title || '';
+    el('f_description').value = ev.description || '';
+    el('f_start').value = toDatetimeLocal(ev.start_date);
+    el('f_end').value = toDatetimeLocal(ev.end_date);
+    el('f_mode').value = ev.mode || 'in_person';
+    el('f_language').value = ev.language || 'en';
+    el('f_country').value = ev.country_id ? String(ev.country_id) : '';
+    el('f_club').value = ev.club_id ? String(ev.club_id) : '';
+    el('f_official_url').value = ev.official_url || '';
+    el('f_registration_url').value = ev.registration_url || '';
+    el('f_image_url').value = ev.image_url || '';
+    el('f_has_booth').checked = !!ev.has_skal_booth;
+    el('f_booth_details').value = ev.booth_details || '';
+    el('f_tags').value = (ev.tags || []).join(', ');
+
+    applyScopeToForm(); // re-applies club/country lock for local_event_manager
+    updateTypeFields();
+
+    el('btnSubmit').textContent = 'Update event';
+    el('btnCancelEdit').style.display = 'inline-block';
+    el('formMsg').className = ''; el('formMsg').textContent = '';
+
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === 'new'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-new'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function exitEditMode(){
+    editingEventId = null;
+    el('eventForm').reset();
+    el('btnSubmit').textContent = 'Create event';
+    el('btnCancelEdit').style.display = 'none';
+    el('imageUploadStatus').textContent = '';
+    applyScopeToForm();
+    updateTypeFields();
+  }
+  el('btnCancelEdit').addEventListener('click', exitEditMode);
+
+  // ---------- Create or update event ----------
   el('eventForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const msg = el('formMsg');
@@ -391,28 +491,33 @@
       has_skal_booth: type === 'fair' ? el('f_has_booth').checked : false,
       booth_details: (type === 'fair' && el('f_has_booth').checked) ? (el('f_booth_details').value || null) : null,
       status: el('f_status').value,
-      source: 'manual',
       tags
     };
 
-    const { error } = await supabase.from('events').insert(payload);
+    let error;
+    if (editingEventId) {
+      ({ error } = await supabase.from('events').update(payload).eq('id', editingEventId));
+    } else {
+      payload.source = 'manual';
+      ({ error } = await supabase.from('events').insert(payload));
+    }
 
     if (error) {
       msg.className = 'error';
-      msg.textContent = 'Could not create event: ' + error.message;
+      msg.textContent = (editingEventId ? 'Could not update event: ' : 'Could not create event: ') + error.message;
     } else {
       msg.className = 'success';
-      msg.textContent = 'Event created successfully.';
-      el('eventForm').reset();
-      applyScopeToForm();
-      updateTypeFields();
+      msg.textContent = editingEventId ? 'Event updated successfully.' : 'Event created successfully.';
+      const wasEditing = !!editingEventId;
+      exitEditMode();
+      if (wasEditing) loadEvents();
     }
     el('btnSubmit').disabled = false;
   });
 
   // ---------- Manage events ----------
   el('btnRefresh').addEventListener('click', loadEvents);
-  el('filterStatus').addEventListener('change', loadEvents);
+  [el('filterStatus'), el('filterType'), el('filterCountry'), el('filterClub')].forEach(x => x.addEventListener('change', loadEvents));
 
   async function loadEvents(){
     const tbody = el('eventsTableBody');
@@ -420,10 +525,13 @@
 
     let query = supabase
       .from('events')
-      .select('id, title, type, status, start_date, clubs(name), countries(name)')
+      .select('*, clubs(name), countries(name)')
       .order('start_date', { ascending: false });
 
     if (el('filterStatus').value) query = query.eq('status', el('filterStatus').value);
+    if (el('filterType').value) query = query.eq('type', el('filterType').value);
+    if (el('filterCountry').value) query = query.eq('country_id', el('filterCountry').value);
+    if (el('filterClub').value) query = query.eq('club_id', el('filterClub').value);
 
     const { data, error } = await query;
     if (error) {
@@ -434,6 +542,8 @@
       tbody.innerHTML = '<tr><td colspan="6">No events found.</td></tr>';
       return;
     }
+
+    window._eventsById = Object.fromEntries(data.map(ev => [ev.id, ev]));
 
     tbody.innerHTML = data.map(ev => `
       <tr data-id="${ev.id}">
@@ -449,6 +559,7 @@
           </select>
         </td>
         <td class="row-actions">
+          <button class="btn" data-edit="${ev.id}">Edit</button>
           ${canHardDelete() ? `<button class="btn danger" data-delete="${ev.id}">Delete</button>` : ''}
         </td>
       </tr>
@@ -459,6 +570,9 @@
         const { error } = await supabase.from('events').update({ status: sel.value }).eq('id', sel.dataset.id);
         if (error) alert('Could not update status: ' + error.message);
       });
+    });
+    tbody.querySelectorAll('[data-edit]').forEach(btn => {
+      btn.addEventListener('click', () => enterEditMode(window._eventsById[btn.dataset.edit]));
     });
     tbody.querySelectorAll('[data-delete]').forEach(btn => {
       btn.addEventListener('click', async () => {

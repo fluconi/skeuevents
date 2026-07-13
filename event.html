@@ -111,6 +111,19 @@
     return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(body);
   }
 
+  function buildGoogleCalendarLink(ev){
+    const start = new Date(ev.start_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+    const end = ev.end_date ? new Date(ev.end_date).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z' : start;
+    const params = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: ev.title,
+      dates: `${start}/${end}`,
+      details: ev.description || '',
+      location: ev.official_url || ''
+    });
+    return `https://www.google.com/calendar/render?${params.toString()}`;
+  }
+
   async function load(){
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id){
@@ -162,7 +175,8 @@
       <div class="actions">
         ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">Official site</a>` : ''}
         ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">Register</a>` : ''}
-        <a href="${buildIcsLink(ev)}" download="event.ics">+ Add to calendar</a>
+        <a href="${buildGoogleCalendarLink(ev)}" target="_blank" rel="noopener">+ Google Calendar</a>
+        <a href="${buildIcsLink(ev)}" download="event.ics">+ Apple / Outlook (.ics)</a>
       </div>
     `;
   }
