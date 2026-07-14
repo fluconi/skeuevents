@@ -244,9 +244,15 @@
         <select id="filterClub"><option value="">All clubs</option></select>
         <button class="btn" id="btnRefresh">Refresh</button>
       </div>
+      <div class="filter-row" id="bulkBar" style="display:none;">
+        <span id="bulkCount" style="font-size:13px; color:var(--muted); font-weight:600;"></span>
+        <button class="btn" id="btnBulkDraft">Set to Draft</button>
+        <button class="btn primary" id="btnBulkPublish">Publish selected</button>
+        <button class="btn danger" id="btnBulkDelete" style="display:none;">Delete selected</button>
+      </div>
       <table>
         <thead>
-          <tr><th>Title</th><th>Type</th><th>Club / Country</th><th>Start</th><th>Status</th><th>Actions</th></tr>
+          <tr><th style="width:34px;"><input type="checkbox" id="selectAll"></th><th>Title</th><th>Type</th><th>Club / Country</th><th>Start</th><th>Status</th><th>Actions</th></tr>
         </thead>
         <tbody id="eventsTableBody"></tbody>
       </table>
@@ -528,7 +534,7 @@
 
   async function loadEvents(){
     const tbody = el('eventsTableBody');
-    tbody.innerHTML = '<tr><td colspan="6">Loading…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7">Loading…</td></tr>';
 
     let query = supabase
       .from('events')
@@ -542,11 +548,11 @@
 
     const { data, error } = await query;
     if (error) {
-      tbody.innerHTML = `<tr><td colspan="6">Error loading events: ${esc(error.message)}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7">Error loading events: ${esc(error.message)}</td></tr>`;
       return;
     }
     if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="6">No events found.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7">No events found.</td></tr>';
       return;
     }
 
@@ -554,6 +560,7 @@
 
     tbody.innerHTML = data.map(ev => `
       <tr data-id="${ev.id}">
+        <td><input type="checkbox" class="row-select" data-id="${ev.id}"></td>
         <td>${esc(ev.title)}</td>
         <td><span class="type-tag ${ev.type}">${ev.type.replace('_',' ')}</span></td>
         <td>${ev.clubs ? esc(ev.clubs.name) : (ev.countries ? esc(ev.countries.name) : '—')}</td>
@@ -589,7 +596,46 @@
         else loadEvents();
       });
     });
+
+    // ---------- Multi-select wiring ----------
+    el('selectAll').checked = false;
+    el('selectAll').addEventListener('change', () => {
+      tbody.querySelectorAll('.row-select').forEach(cb => cb.checked = el('selectAll').checked);
+      updateBulkBar();
+    });
+    tbody.querySelectorAll('.row-select').forEach(cb => cb.addEventListener('change', updateBulkBar));
+    updateBulkBar();
   }
+
+  function getSelectedIds(){
+    return Array.from(document.querySelectorAll('.row-select:checked')).map(cb => cb.dataset.id);
+  }
+
+  function updateBulkBar(){
+    const ids = getSelectedIds();
+    el('bulkBar').style.display = ids.length ? 'flex' : 'none';
+    el('bulkCount').textContent = `${ids.length} selected`;
+    el('btnBulkDelete').style.display = canHardDelete() ? 'inline-block' : 'none';
+  }
+
+  async function bulkSetStatus(status){
+    const ids = getSelectedIds();
+    if (!ids.length) return;
+    const { error } = await supabase.from('events').update({ status }).in('id', ids);
+    if (error) alert('Could not update selected events: ' + error.message);
+    loadEvents();
+  }
+
+  el('btnBulkDraft').addEventListener('click', () => bulkSetStatus('draft'));
+  el('btnBulkPublish').addEventListener('click', () => bulkSetStatus('published'));
+  el('btnBulkDelete').addEventListener('click', async () => {
+    const ids = getSelectedIds();
+    if (!ids.length) return;
+    if (!confirm(`Delete ${ids.length} event(s) permanently? This cannot be undone.`)) return;
+    const { error } = await supabase.from('events').delete().in('id', ids);
+    if (error) alert('Could not delete selected events: ' + error.message);
+    loadEvents();
+  });
 
   function canHardDelete(){
     return profile.role === 'admin' || profile.role === 'event_manager';
