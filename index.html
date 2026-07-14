@@ -85,16 +85,21 @@
   .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
   .cal-weekday{text-align:center; font-size:11px; text-transform:uppercase; color:var(--muted); font-weight:600; padding-bottom:6px;}
   .cal-cell{
-    background:var(--white); border:1px solid var(--line); border-radius:8px; min-height:76px;
-    padding:6px; cursor:pointer; font-size:12.5px; color:var(--ink);
+    background:var(--white); border:1px solid var(--line); border-radius:8px; min-height:92px;
+    padding:6px; cursor:pointer; font-size:12.5px; color:var(--ink); overflow:hidden;
   }
   .cal-cell:hover{border-color:var(--light-blue);}
   .cal-cell.other-month{opacity:.35;}
   .cal-cell.is-today{border-color:var(--navy); border-width:2px;}
   .cal-cell .cal-day-num{font-weight:700; margin-bottom:4px;}
-  .cal-dot-row{display:flex; gap:3px; flex-wrap:wrap;}
-  .cal-dot{width:6px; height:6px; border-radius:50%; background:var(--light-blue);}
-  .cal-count{font-size:10.5px; color:var(--muted); margin-top:2px;}
+  .cal-event-chip{
+    display:block; font-size:10.5px; line-height:1.4; padding:2px 6px; margin-bottom:2px;
+    border-radius:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .cal-event-chip.type-academy{background:#e7edf7; color:var(--navy);}
+  .cal-event-chip.type-club_event{background:#eef3ee; color:#3f6b4a;}
+  .cal-event-chip.type-fair{background:#eaf3fb; color:#3a7bb5;}
+  .cal-more{font-size:10.5px; color:var(--muted); padding:1px 6px;}
 
   .empty-state{text-align:center; color:var(--muted); font-size:14px; padding:30px 0;}
 
@@ -204,7 +209,7 @@
       resultsCount:n=>`${n} events found`, loadError:"Error loading events.",
       modeOnline:"Online", modeHybrid:"Hybrid", modeInPerson:"In person", skalBooth:"Skål booth",
       footerText:"© 2026 Skål Europe — events platform", locale:"en-GB",
-      viewList:"List", viewMonth:"Month", viewDay:"Day", today:"Today" },
+      viewList:"List", viewMonth:"Month", viewDay:"Day", today:"Today", more:"more" },
     fr: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Événements Skål Europe",
       subtitle:"Académies, événements de clubs et principaux salons du tourisme en Europe — avec mise en évidence des stands Skål.",
       filterAllTypes:"Tous les types", typeAcademy:"Académie", typeClub:"Événement de club", typeFair:"Salon",
@@ -213,7 +218,7 @@
       resultsCount:n=>`${n} événements trouvés`, loadError:"Erreur de chargement.",
       modeOnline:"En ligne", modeHybrid:"Hybride", modeInPerson:"En présentiel", skalBooth:"Stand Skål",
       footerText:"© 2026 Skål Europe — plateforme d'événements", locale:"fr-FR",
-      viewList:"Liste", viewMonth:"Mois", viewDay:"Jour", today:"Aujourd'hui" },
+      viewList:"Liste", viewMonth:"Mois", viewDay:"Jour", today:"Aujourd'hui", more:"de plus" },
     it: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Eventi Skål Europe",
       subtitle:"Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti.",
       filterAllTypes:"Tutti i tipi", typeAcademy:"Accademia", typeClub:"Evento di club", typeFair:"Fiera",
@@ -222,7 +227,7 @@
       resultsCount:n=>`${n} eventi trovati`, loadError:"Errore nel caricamento eventi.",
       modeOnline:"Online", modeHybrid:"Ibrido", modeInPerson:"In presenza", skalBooth:"Stand Skål",
       footerText:"© 2026 Skål Europe — piattaforma eventi", locale:"it-IT",
-      viewList:"Lista", viewMonth:"Mese", viewDay:"Giorno", today:"Oggi" },
+      viewList:"Lista", viewMonth:"Mese", viewDay:"Giorno", today:"Oggi", more:"altri" },
     de: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Skål Europe Veranstaltungen",
       subtitle:"Akademien, Club-Veranstaltungen und die wichtigsten Tourismusmessen Europas — mit Hervorhebung der Skål-Stände.",
       filterAllTypes:"Alle Typen", typeAcademy:"Akademie", typeClub:"Club-Veranstaltung", typeFair:"Messe",
@@ -231,7 +236,7 @@
       resultsCount:n=>`${n} Veranstaltungen gefunden`, loadError:"Fehler beim Laden.",
       modeOnline:"Online", modeHybrid:"Hybrid", modeInPerson:"Vor Ort", skalBooth:"Skål-Stand",
       footerText:"© 2026 Skål Europe — Veranstaltungsplattform", locale:"de-DE",
-      viewList:"Liste", viewMonth:"Monat", viewDay:"Tag", today:"Heute" },
+      viewList:"Liste", viewMonth:"Monat", viewDay:"Tag", today:"Heute", more:"weitere" },
     es: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Eventos Skål Europe",
       subtitle:"Academias, eventos de clubes y las principales ferias de turismo en Europa — con los stands de Skål destacados.",
       filterAllTypes:"Todos los tipos", typeAcademy:"Academia", typeClub:"Evento de club", typeFair:"Feria",
@@ -240,7 +245,7 @@
       resultsCount:n=>`${n} eventos encontrados`, loadError:"Error al cargar.",
       modeOnline:"En línea", modeHybrid:"Híbrido", modeInPerson:"Presencial", skalBooth:"Stand de Skål",
       footerText:"© 2026 Skål Europe — plataforma de eventos", locale:"es-ES",
-      viewList:"Lista", viewMonth:"Mes", viewDay:"Día", today:"Hoy" }
+      viewList:"Lista", viewMonth:"Mes", viewDay:"Día", today:"Hoy", more:"más" }
   };
 
   function detectInitialLang(){
@@ -431,19 +436,22 @@
     });
 
     const today = ymd(new Date());
+    const labels = typeLabels();
+    const MAX_VISIBLE = 2;
     let html = '';
     for (let i = 0; i < totalCells; i++){
       const cellDate = addDays(gridStart, i);
       const key = ymd(cellDate);
       const inMonth = cellDate.getMonth() === firstOfMonth.getMonth();
       const dayEvents = byDay[key] || [];
+      const visible = dayEvents.slice(0, MAX_VISIBLE);
+      const extra = dayEvents.length - visible.length;
+      const tooltip = dayEvents.map(ev => ev.title).join('\n');
       html += `
-        <div class="cal-cell ${inMonth?'':'other-month'} ${key===today?'is-today':''}" data-date="${key}">
+        <div class="cal-cell ${inMonth?'':'other-month'} ${key===today?'is-today':''}" data-date="${key}" ${tooltip ? `title="${esc(tooltip)}"` : ''}>
           <div class="cal-day-num">${cellDate.getDate()}</div>
-          ${dayEvents.length ? `
-            <div class="cal-dot-row">${dayEvents.slice(0,4).map(()=>'<span class="cal-dot"></span>').join('')}</div>
-            <div class="cal-count">${dayEvents.length}</div>
-          ` : ''}
+          ${visible.map(ev => `<span class="cal-event-chip type-${ev.type}">${esc(ev.title)}</span>`).join('')}
+          ${extra > 0 ? `<span class="cal-more">+${extra} ${t('more')}</span>` : ''}
         </div>`;
     }
     el('calGrid').innerHTML = html;
