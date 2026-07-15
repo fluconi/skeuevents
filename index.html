@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eventi Skål Europe</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#314691">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Skål Events">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
@@ -75,6 +82,8 @@
   .badge.type-academy{background:#e7edf7; color:var(--navy);}
   .badge.type-club_event{background:#eef3ee; color:#3f6b4a;}
   .badge.type-fair{background:#eaf3fb; color:var(--light-blue);}
+  .badge.type-congress{background:#f3e9f7; color:#7a3d9c;}
+  .badge.type-delegates_assembly{background:#fdf0e4; color:#a05a1f;}
   .badge.skal-booth{background:var(--yellow); color:#5a4d00;}
   .row-body h3{margin:0 0 4px; font-size:15.5px; color:var(--navy); font-weight:600;}
   .row-meta{font-size:12.5px; color:var(--muted);}
@@ -99,6 +108,8 @@
   .cal-event-chip.type-academy{background:#e7edf7; color:var(--navy);}
   .cal-event-chip.type-club_event{background:#eef3ee; color:#3f6b4a;}
   .cal-event-chip.type-fair{background:#eaf3fb; color:#3a7bb5;}
+  .cal-event-chip.type-congress{background:#f3e9f7; color:#7a3d9c;}
+  .cal-event-chip.type-delegates_assembly{background:#fdf0e4; color:#a05a1f;}
   .cal-more{font-size:10.5px; color:var(--muted); padding:1px 6px;}
 
   .empty-state{text-align:center; color:var(--muted); font-size:14px; padding:30px 0;}
@@ -147,6 +158,8 @@
     <option value="academy" data-i18n="typeAcademy">Accademia</option>
     <option value="club_event" data-i18n="typeClub">Evento di club</option>
     <option value="fair" data-i18n="typeFair">Fiera</option>
+    <option value="congress" data-i18n="typeCongress">Congresso</option>
+    <option value="delegates_assembly" data-i18n="typeAssembly">Assemblea dei delegati</option>
   </select>
   <select id="fCountry"><option value="" data-i18n="filterAllCountries">Tutte le nazioni</option></select>
   <select id="fClub"><option value="" data-i18n="filterAllClubs">Tutti i club</option></select>
@@ -203,7 +216,7 @@
   const translations = {
     en: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Skål Europe Events",
       subtitle:"Academies, Club events and the main European tourism trade fairs — with Skål booths highlighted where present.",
-      filterAllTypes:"All types", typeAcademy:"Academy", typeClub:"Club event", typeFair:"Trade fair",
+      filterAllTypes:"All types", typeAcademy:"Academy", typeClub:"Club event", typeFair:"Trade fair", typeCongress:"Congress", typeAssembly:"Delegates Assembly",
       filterAllCountries:"All countries", filterAllClubs:"All clubs", filterAllTopics:"All topics",
       searchPlaceholder:"Search by title…", loading:"Loading events…", noResults:"No events found.",
       resultsCount:n=>`${n} events found`, loadError:"Error loading events.",
@@ -212,7 +225,7 @@
       viewList:"List", viewMonth:"Month", viewDay:"Day", today:"Today", more:"more" },
     fr: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Événements Skål Europe",
       subtitle:"Académies, événements de clubs et principaux salons du tourisme en Europe — avec mise en évidence des stands Skål.",
-      filterAllTypes:"Tous les types", typeAcademy:"Académie", typeClub:"Événement de club", typeFair:"Salon",
+      filterAllTypes:"Tous les types", typeAcademy:"Académie", typeClub:"Événement de club", typeFair:"Salon", typeCongress:"Congrès", typeAssembly:"Assemblée des délégués",
       filterAllCountries:"Tous les pays", filterAllClubs:"Tous les clubs", filterAllTopics:"Tous les sujets",
       searchPlaceholder:"Rechercher par titre…", loading:"Chargement…", noResults:"Aucun événement trouvé.",
       resultsCount:n=>`${n} événements trouvés`, loadError:"Erreur de chargement.",
@@ -221,7 +234,7 @@
       viewList:"Liste", viewMonth:"Mois", viewDay:"Jour", today:"Aujourd'hui", more:"de plus" },
     it: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Eventi Skål Europe",
       subtitle:"Accademie, eventi dei club e le principali fiere del turismo in Europa — con evidenza degli stand Skål dove presenti.",
-      filterAllTypes:"Tutti i tipi", typeAcademy:"Accademia", typeClub:"Evento di club", typeFair:"Fiera",
+      filterAllTypes:"Tutti i tipi", typeAcademy:"Accademia", typeClub:"Evento di club", typeFair:"Fiera", typeCongress:"Congresso", typeAssembly:"Assemblea dei delegati",
       filterAllCountries:"Tutte le nazioni", filterAllClubs:"Tutti i club", filterAllTopics:"Tutti gli argomenti",
       searchPlaceholder:"Cerca per titolo…", loading:"Caricamento eventi…", noResults:"Nessun evento trovato.",
       resultsCount:n=>`${n} eventi trovati`, loadError:"Errore nel caricamento eventi.",
@@ -230,7 +243,7 @@
       viewList:"Lista", viewMonth:"Mese", viewDay:"Giorno", today:"Oggi", more:"altri" },
     de: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Skål Europe Veranstaltungen",
       subtitle:"Akademien, Club-Veranstaltungen und die wichtigsten Tourismusmessen Europas — mit Hervorhebung der Skål-Stände.",
-      filterAllTypes:"Alle Typen", typeAcademy:"Akademie", typeClub:"Club-Veranstaltung", typeFair:"Messe",
+      filterAllTypes:"Alle Typen", typeAcademy:"Akademie", typeClub:"Club-Veranstaltung", typeFair:"Messe", typeCongress:"Kongress", typeAssembly:"Delegiertenversammlung",
       filterAllCountries:"Alle Länder", filterAllClubs:"Alle Clubs", filterAllTopics:"Alle Themen",
       searchPlaceholder:"Nach Titel suchen…", loading:"Wird geladen…", noResults:"Keine Veranstaltungen gefunden.",
       resultsCount:n=>`${n} Veranstaltungen gefunden`, loadError:"Fehler beim Laden.",
@@ -239,7 +252,7 @@
       viewList:"Liste", viewMonth:"Monat", viewDay:"Tag", today:"Heute", more:"weitere" },
     es: { eyebrow:"Skål Europe · Connecting Tourism Globally", title:"Eventos Skål Europe",
       subtitle:"Academias, eventos de clubes y las principales ferias de turismo en Europa — con los stands de Skål destacados.",
-      filterAllTypes:"Todos los tipos", typeAcademy:"Academia", typeClub:"Evento de club", typeFair:"Feria",
+      filterAllTypes:"Todos los tipos", typeAcademy:"Academia", typeClub:"Evento de club", typeFair:"Feria", typeCongress:"Congreso", typeAssembly:"Asamblea de delegados",
       filterAllCountries:"Todos los países", filterAllClubs:"Todos los clubes", filterAllTopics:"Todos los temas",
       searchPlaceholder:"Buscar por título…", loading:"Cargando…", noResults:"No se encontraron eventos.",
       resultsCount:n=>`${n} eventos encontrados`, loadError:"Error al cargar.",
@@ -275,7 +288,7 @@
   let currentView = 'list';
   let monthCursor = startOfMonth(new Date());
   let dayCursor = startOfDay(new Date());
-  const typeLabels = () => ({ academy:t('typeAcademy'), club_event:t('typeClub'), fair:t('typeFair') });
+  const typeLabels = () => ({ academy:t('typeAcademy'), club_event:t('typeClub'), fair:t('typeFair'), congress:t('typeCongress'), delegates_assembly:t('typeAssembly') });
 
   const el = id => document.getElementById(id);
   function esc(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -475,6 +488,10 @@
   applyStaticTranslations();
   await loadFilterOptions();
   render();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
 </script>
 
 </body>

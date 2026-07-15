@@ -105,6 +105,8 @@
   .type-tag.academy{background:#e7edf7; color:var(--navy);}
   .type-tag.club_event{background:#eef3ee; color:#3f6b4a;}
   .type-tag.fair{background:#eaf3fb; color:var(--light-blue);}
+  .type-tag.congress{background:#f3e9f7; color:#7a3d9c;}
+  .type-tag.delegates_assembly{background:#fdf0e4; color:#a05a1f;}
   .row-actions{display:flex; gap:6px;}
 </style>
 </head>
@@ -144,6 +146,8 @@
             <option value="fair">Trade fair</option>
             <option value="academy">Academy</option>
             <option value="club_event">Club event</option>
+            <option value="congress">Congress</option>
+            <option value="delegates_assembly">Delegates Assembly</option>
           </select>
         </div>
         <div>
@@ -244,6 +248,8 @@
           <option value="academy">Academy</option>
           <option value="club_event">Club event</option>
           <option value="fair">Trade fair</option>
+          <option value="congress">Congress</option>
+          <option value="delegates_assembly">Delegates Assembly</option>
         </select>
         <select id="filterCountry"><option value="">All countries</option></select>
         <select id="filterClub"><option value="">All clubs</option></select>
@@ -485,7 +491,8 @@
 
     const type = el('f_type').value;
 
-    if (type !== 'fair' && !el('f_club').value) {
+    const CLUB_REQUIRED_TYPES = ['academy', 'club_event'];
+    if (CLUB_REQUIRED_TYPES.includes(type) && !el('f_club').value) {
       msg.className = 'error'; msg.textContent = 'Club is required for academies and club events.';
       el('btnSubmit').disabled = false;
       return;

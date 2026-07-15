@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Event details — Skål Europe</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#314691">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -39,6 +44,8 @@
   .badge.type-academy{background:#e7edf7; color:var(--navy);}
   .badge.type-club_event{background:#eef3ee; color:#3f6b4a;}
   .badge.type-fair{background:#eaf3fb; color:var(--light-blue);}
+  .badge.type-congress{background:#f3e9f7; color:#7a3d9c;}
+  .badge.type-delegates_assembly{background:#fdf0e4; color:#a05a1f;}
   .badge.skal-booth{background:var(--yellow); color:#5a4d00;}
 
   h1{font-size:clamp(24px,4vw,32px); color:var(--navy); margin:0 0 14px; font-weight:700;}
@@ -85,7 +92,7 @@
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const main = document.getElementById('main');
 
-  const typeLabels = { academy: 'Academy', club_event: 'Club event', fair: 'Trade fair' };
+  const typeLabels = { academy: 'Academy', club_event: 'Club event', fair: 'Trade fair', congress: 'Congress', delegates_assembly: 'Delegates Assembly' };
   const modeLabels = { online: 'Online', hybrid: 'Hybrid', in_person: 'In person' };
 
   function esc(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
@@ -182,6 +189,10 @@
   }
 
   load();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
 </script>
 
 </body>
