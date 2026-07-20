@@ -57,6 +57,7 @@
   @media (max-width:600px){ .meta-grid{grid-template-columns:1fr;} }
   .meta-item .label{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600; margin-bottom:3px;}
   .meta-item .value{font-size:14px; color:var(--ink);}
+  .meta-item.full-width{grid-column:1/-1;}
 
   .description{font-size:15px; margin-bottom:28px; white-space:pre-wrap;}
 
@@ -131,6 +132,17 @@
     return `https://www.google.com/calendar/render?${params.toString()}`;
   }
 
+  function buildMapsLinkCoords(ev){
+    if (ev.venue_lat == null || ev.venue_lng == null) return null;
+    return `https://www.google.com/maps/search/?api=1&query=${ev.venue_lat},${ev.venue_lng}`;
+  }
+
+  function buildMapsLinkSearch(ev){
+    const query = [ev.venue_name, ev.venue_address].filter(Boolean).join(', ');
+    if (!query) return null;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+  }
+
   async function load(){
     const id = new URLSearchParams(window.location.search).get('id');
     if (!id){
@@ -175,11 +187,20 @@
         </div>
         ${ev.clubs ? `<div class="meta-item"><div class="label">Club</div><div class="value">${esc(ev.clubs.name)}</div></div>` : ''}
         ${ev.countries ? `<div class="meta-item"><div class="label">Country</div><div class="value">${esc(ev.countries.name)}</div></div>` : ''}
+        ${ev.venue_name || ev.venue_address ? `
+        <div class="meta-item full-width">
+          <div class="label">Venue</div>
+          <div class="value">
+            ${ev.venue_name ? esc(ev.venue_name) : ''}${ev.venue_name && ev.venue_address ? ' — ' : ''}${ev.venue_address ? esc(ev.venue_address) : ''}
+          </div>
+        </div>` : ''}
       </div>
 
       ${ev.description ? `<div class="description">${esc(ev.description)}</div>` : ''}
 
       <div class="actions">
+        ${buildMapsLinkCoords(ev) ? `<a href="${buildMapsLinkCoords(ev)}" target="_blank" rel="noopener">📍 View on Google Maps</a>` : ''}
+        ${buildMapsLinkSearch(ev) ? `<a href="${buildMapsLinkSearch(ev)}" target="_blank" rel="noopener">🔍 Find venue on Google Maps</a>` : ''}
         ${ev.official_url ? `<a href="${ev.official_url}" target="_blank" rel="noopener">Official site</a>` : ''}
         ${ev.registration_url ? `<a class="primary" href="${ev.registration_url}" target="_blank" rel="noopener">Register</a>` : ''}
         <a href="${buildGoogleCalendarLink(ev)}" target="_blank" rel="noopener">+ Google Calendar</a>

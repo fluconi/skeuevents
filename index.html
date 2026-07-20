@@ -367,6 +367,7 @@
           <h3>${esc(ev.title)}</h3>
           <div class="row-meta">
             ${dateStr}
+            ${ev.venue_name ? ' · ' + esc(ev.venue_name) : ''}
             ${ev.clubs ? ' · ' + esc(ev.clubs.name) : (ev.countries ? ' · ' + esc(ev.countries.name) : '')}
             · ${ev.mode==='online'?t('modeOnline'):ev.mode==='hybrid'?t('modeHybrid'):t('modeInPerson')}
           </div>
